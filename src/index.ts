@@ -11,7 +11,6 @@ app.use(express.json());
 app.use("/user", userRouter);
 
 
-// Trecho do código responsável por inicializar todas as APIs
 const server = app.listen(process.env.PORT || 3000, () => {
   if (server) {
     const address = server.address() as AddressInfo;

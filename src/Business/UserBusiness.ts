@@ -3,7 +3,8 @@ import { Authenticator } from "../Services/Authenticator";
 import { HashManager } from "../Services/HashManager";
 import { IdGenerator } from "../Services/IdGenerator";
 import { InvalidParameterError } from "../Errors/InvalidParamenterError";
-import { User } from "../Model/UserModel";
+import { User, UserRole } from "../Model/UserModel";
+import { NotFoundError } from "../Errors/NotFoundError";
 
 export class UserBusiness {
 
@@ -36,6 +37,13 @@ export class UserBusiness {
 
             throw new InvalidParameterError("Invalid E-mail")
         }
+        if (role === UserRole.ADMIN && password.length < 10) {
+
+            throw new InvalidParameterError(
+
+              "Invalid password"
+            );
+          }
 
         const id = this.idGenerator.generate()
 
@@ -45,6 +53,11 @@ export class UserBusiness {
 
         await this.userDatabase.createUser(user)
 
+        if(UserRole.ADMIN !== "admin") {
+
+              await this.userDatabase.getUserByRole(id, role)
+        }
+
         const token = this.auth.generateToken({
             id,
             role
@@ -52,5 +65,86 @@ export class UserBusiness {
 
         return{ Access_token: token }  
 
+    }
+    // public async verifyEmail(email:string) {
+      
+    //      const userData = await this.userDatabase.getUserByEmail(email);
+         
+    //       if (!userData) {
+
+    //         throw new NotFoundError("Invalid Email");
+    //       }
+    //       return userData
+    // }
+    // public async verifyNickname(nickname:string) {
+
+    //   const userData = await this.userDatabase.getUserByNickname(nickname);
+         
+    //      if (!userData) {
+
+    //         throw new NotFoundError("Invalid Nickname");
+    //       }
+
+    //       return userData.getEmail()
+    // }
+
+    public async login( 
+       
+        emailORPassword:string,
+        password: string
+
+        ) {
+
+    if (!emailORPassword) {
+
+      throw new InvalidParameterError("Missing input");
+    }
+    if(emailORPassword) {
+
+      const email = await this.userDatabase.getUserByEmail(emailORPassword);
+      const nickname = await this.userDatabase.getUserByNickname(emailORPassword);
+      
+      if(email) { 
+        const isPasswordCorrect = await this.hashGenerator.compare(
+              password, 
+              email.getPassword()
+            )
+  
+            if(!isPasswordCorrect) {
+
+                throw new InvalidParameterError("Somethings wrong")
+            }
+            const token = await this.auth.generateToken({
+
+              id:email.getId(), 
+              role:email.getRole()
+            })
+  
+            return{ Access_token: token } 
+          
+
+      } else if(nickname) {
+        const isPasswordCorrect = await this.hashGenerator.compare(
+          password, 
+          nickname.getPassword()
+        )
+
+        if(!isPasswordCorrect) {
+
+            throw new InvalidParameterError("Somethings wrong")
+        }
+
+  
+        const token = await this.auth.generateToken({
+
+            id:nickname.getId(), 
+            role:nickname.getRole()
+          })
+
+          return{ Access_token: token } 
+        }
+
+      }
+        
     }
 }

@@ -17,7 +17,7 @@ export class UserController {
 
     ) 
     
-    async signup(req:Request, res:Response) {
+    public async signup(req:Request, res:Response) {
 
         try {
 
@@ -38,5 +38,32 @@ export class UserController {
             res.status(error.errorCode || 400).send({ message: error.message})
         }
 
+    }
+    public async login(req: Request, res: Response) {
+
+        try {
+
+            const emailORPassword = req.body.email || req.body.nickname
+
+            // const verifyEmail = await UserController.UserBusiness.verifyEmail(emailORPassword)
+
+            // if(verifyEmail){
+
+            //     const result = await UserController.UserBusiness.login(emailORPassword, req.body.password)
+            // }
+
+            // const verifyNickname = await UserController.UserBusiness.verifyNickname(emailORPassword)
+
+            // if(verifyNickname){
+
+                const result = await UserController.UserBusiness.login(emailORPassword, req.body.password)
+            // }
+           
+          res.status(200).send({ message: "Hello" });
+
+        } catch (err) {
+
+          res.status(err.errorCode || 400).send({ message: err.message || err.mysqlmessage} )
+        }
     }
 }

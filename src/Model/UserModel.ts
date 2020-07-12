@@ -24,7 +24,7 @@ export class User {
     public getNickname():string {
         return this.nickname
     }
-    public getPasword():string {
+    public getPassword():string {
         return this.password
     }
     public getRole():UserRole {
@@ -54,12 +54,10 @@ export class User {
 
 
 export enum UserRole {
-
     BANDA = "banda",
     OUVINTE_PAGANTE = "ouvinte pagante",
     OUVINTE_NAO_PAGANTE = "ouvinte não pagante",
-    ADMIN = "admin"
-
-
+    ADMIN = "admin",
+    UserRole = "UserRole"
 }
 
