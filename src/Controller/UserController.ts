@@ -4,10 +4,13 @@ import { Authenticator } from "../Services/Authenticator";
 import { HashManager } from "../Services/HashManager";
 import { IdGenerator } from "../Services/IdGenerator";
 import express, { Request, Response } from "express";
+import { SignupInputDTO } from "../DTO/UserDTO";
+import { BaseDataBase } from "../Data/BaseDatabase";
+import { UserRole } from "../Model/UserModel";
+import { Unauthorized } from "../Errors/Unauthorized";
 
-
-
-export class UserController {
+export class UserController extends BaseDataBase {
+    protected table: string;
 
     private static UserBusiness = new UserBusiness (
         new UserDatabase (),
@@ -21,22 +24,34 @@ export class UserController {
 
         try {
 
-            const newUser = await UserController.UserBusiness.signup(
+            const newUser:SignupInputDTO = { 
 
-                req.body.name,
-                req.body.email,
-                req.body.nickname,
-                req.body.password,
-                req.body.role,
+                name: req.body.name,
+                email: req.body.email,
+                nickname: req.body.nickname,
+                password: req.body.password,
+                role: req.body.role,
+                description_band: req.body.description_band
+
+            }
+
+            const userInfo = await UserController.UserBusiness.signup(
+                newUser.name,
+                newUser.email,
+                newUser.nickname,
+                newUser.password,
+                newUser.role,
+                newUser.description_band
 
             )
 
-            res.status(200).send(newUser)
+            res.status(200).send(userInfo)
 
         } catch(error) {
 
             res.status(error.errorCode || 400).send({ message: error.message})
         }
+        await this.destroyConnection()
 
     }
     public async login(req: Request, res: Response) {
@@ -45,25 +60,39 @@ export class UserController {
 
             const emailORPassword = req.body.email || req.body.nickname
 
-            // const verifyEmail = await UserController.UserBusiness.verifyEmail(emailORPassword)
-
-            // if(verifyEmail){
-
-            //     const result = await UserController.UserBusiness.login(emailORPassword, req.body.password)
-            // }
-
-            // const verifyNickname = await UserController.UserBusiness.verifyNickname(emailORPassword)
-
-            // if(verifyNickname){
-
                 const result = await UserController.UserBusiness.login(emailORPassword, req.body.password)
-            // }
-           
-          res.status(200).send({ message: "Hello" });
+       
+          res.status(200).send({ result });
 
         } catch (err) {
 
           res.status(err.errorCode || 400).send({ message: err.message || err.mysqlmessage} )
         }
+
+        // await this.destroyConnection()
+    }
+    public async approveBand(req:Request, res:Response) {
+
+        try {
+            
+            const idBandToApprove = req.body.id
+
+            const accesToken = req.headers.authorization as string;
+            const verifyToken = new Authenticator().getData(accesToken);
+
+            if(verifyToken.role !== UserRole.ADMIN) {
+
+                throw new Unauthorized("You can't do this") 
+            }
+
+           const bandAprroved = await UserController.UserBusiness.approveBand(idBandToApprove)
+
+            res.status(200).send(bandAprroved)
+            
+        }  catch(error) {
+
+            res.status(error.errorCode || 400).send({ message: error.message})
+        }
+        //await this.destroyConnection()
     }
 }

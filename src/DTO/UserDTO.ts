@@ -3,5 +3,10 @@ export interface SignupInputDTO {
     email: string,
     nickname:string,
     password: string,
-    role: string
+    role: string,
+    description_band:string
+}
+
+export interface GetUserByIdInputDTO {
+    id: string
 }

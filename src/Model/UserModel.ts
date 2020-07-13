@@ -9,7 +9,8 @@ export class User {
         private nickname: string,
         private password: string,
         private role: UserRole,
-        private description_band?: string
+        private description_band?: string,
+        private is_approved?: boolean
     ) {}
 
     public getId(): string {
@@ -32,6 +33,9 @@ export class User {
     }
     public getDescription():string {
         return this.description_band
+    }
+    public getApprove():boolean {
+        return this.is_approved
     }
 
     static mapStringToUserType(role:string):UserRole {
@@ -57,7 +61,6 @@ export enum UserRole {
     BANDA = "banda",
     OUVINTE_PAGANTE = "ouvinte pagante",
     OUVINTE_NAO_PAGANTE = "ouvinte não pagante",
-    ADMIN = "admin",
-    UserRole = "UserRole"
+    ADMIN = "admin"
 }
 

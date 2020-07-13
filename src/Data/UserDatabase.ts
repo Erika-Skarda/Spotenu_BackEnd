@@ -1,6 +1,7 @@
 import { BaseDataBase } from "./BaseDatabase";
 import { User, UserRole } from "../Model/UserModel";
 import { NotFoundError } from "../Errors/NotFoundError";
+import { GenericError } from "../Errors/GenericError";
 
 export class UserDatabase extends BaseDataBase {
 
@@ -16,7 +17,8 @@ export class UserDatabase extends BaseDataBase {
                 UserModel.nickname,
                 UserModel.password,
                 UserModel.role,
-                UserModel.description_band
+                UserModel.description_band,
+                UserModel.is_approved
 
             )
         )
@@ -104,7 +106,7 @@ export class UserDatabase extends BaseDataBase {
           return this.UserFromUserModel(user);
         });
       }
-    public async getUserByRole(id:string, role:string): Promise<any> {
+    public async getUserByRole(id:string, role:string) : Promise<any> {
 
         try {
             const result = await super.getConnection().raw(`
@@ -129,6 +131,41 @@ export class UserDatabase extends BaseDataBase {
             throw new NotFoundError("User not found")
         }
 
+    }
+    public async approveBand(id: string) : Promise<any>{
+
+        try { 
+
+            const queryData = await this.getConnection().raw(`
+                SELECT * 
+                FROM ${this.table}
+                WHERE id = '${id}'
+            `);
+    
+         const band = this.UserFromUserModel(queryData[0][0]);
+      
+
+         //if((Number(band.getApprove()) === 1? true : false) === true) {
+            if((band.getApprove()) === true) {
+
+                throw new GenericError("Usuário já aprovado!");
+
+            } 
+       
+            await super.getConnection().raw(`
+                UPDATE ${this.table}
+                SET is_approved = 1
+                WHERE id = "${id}"
+           `);
+
+        //    return this.UserFromUserModel(queryData[0][0])
+
+        }  catch (err) {
+            console.log(err)
+
+            throw new NotFoundError("User not found")
+        }
+       
     }
 
 }

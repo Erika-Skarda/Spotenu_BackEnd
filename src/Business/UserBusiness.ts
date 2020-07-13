@@ -22,10 +22,11 @@ export class UserBusiness {
         email: string,
         nickname: string,
         password: string,
-        role: string
+        role: string,
+        description_band?:string
 
     ) {
-        if(!name || !email || !nickname || !password) {
+        if(!name || !email || !nickname || !password || !role) {
 
             throw new InvalidParameterError("Missing input")
         } 
@@ -37,19 +38,26 @@ export class UserBusiness {
 
             throw new InvalidParameterError("Invalid E-mail")
         }
-        if (role === UserRole.ADMIN && password.length < 10) {
+        if (role === UserRole.ADMIN && password.length <= 10) {
 
             throw new InvalidParameterError(
 
               "Invalid password"
             );
           }
+        if(role === UserRole.BANDA && !description_band) {
+
+          throw new InvalidParameterError(
+
+            "Invalid description"
+          );
+        }
 
         const id = this.idGenerator.generate()
 
         const hashPassword = await this.hashGenerator.hash(password)
         
-        const user = new User (id, name, email, nickname, hashPassword, User.mapStringToUserType(role))
+        const user = new User (id, name, email, nickname, hashPassword, User.mapStringToUserType(role), description_band)
 
         await this.userDatabase.createUser(user)
 
@@ -66,28 +74,6 @@ export class UserBusiness {
         return{ Access_token: token }  
 
     }
-    // public async verifyEmail(email:string) {
-      
-    //      const userData = await this.userDatabase.getUserByEmail(email);
-         
-    //       if (!userData) {
-
-    //         throw new NotFoundError("Invalid Email");
-    //       }
-    //       return userData
-    // }
-    // public async verifyNickname(nickname:string) {
-
-    //   const userData = await this.userDatabase.getUserByNickname(nickname);
-         
-    //      if (!userData) {
-
-    //         throw new NotFoundError("Invalid Nickname");
-    //       }
-
-    //       return userData.getEmail()
-    // }
-
     public async login( 
        
         emailORPassword:string,
@@ -147,4 +133,20 @@ export class UserBusiness {
       }
         
     }
+
+    public async approveBand(id: string) {
+      const band = await this.userDatabase.getUserById(id)
+       
+      if (!band) {
+
+        throw new NotFoundError("Band not found");
+
+      }
+
+      await this.userDatabase.approveBand(id)
+      const bandNmae = await this.userDatabase.getUserById(id)
+
+       return {Banda: bandNmae.getName()}
+    }
+    
 }
