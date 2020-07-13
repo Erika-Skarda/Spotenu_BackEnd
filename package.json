@@ -1,0 +1,45 @@
+{
+  "name": "spotenu_backend",
+  "version": "1.0.0",
+  "description": "Parte do backend do projeto Spotenu",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./node_modules/jest/bin/jest.js",
+    "start": "ts-node-dev ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Erika-Skarda/Spotenu_BackEnd.git"
+  },
+  "keywords": [
+    "Backend",
+    "Spotenu"
+  ],
+  "author": "Erika SKarda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Erika-Skarda/Spotenu_BackEnd/issues"
+  },
+  "homepage": "https://github.com/Erika-Skarda/Spotenu_BackEnd#readme",
+  "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.0",
+    "@types/jest": "^26.0.4",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/knex": "^0.16.1",
+    "@types/node": "^14.0.21",
+    "@types/uuid": "^8.0.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.0",
+    "jest": "^26.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.21.2",
+    "moment": "^2.27.0",
+    "mysql": "^2.18.1",
+    "ts-jest": "^26.1.1",
+    "ts-node-dev": "^1.0.0-pre.51",
+    "typescript": "^3.9.6",
+    "uuid": "^8.2.0"
+  }
+}
