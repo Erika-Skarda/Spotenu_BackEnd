@@ -5,7 +5,7 @@ import { GenericError } from "../Errors/GenericError";
 
 export class UserDatabase extends BaseDataBase {
 
-    table:string = "Spotenu_User";
+    protected table:string = "Spotenu_User";
 
     private UserFromUserModel(UserModel?:any) : User | undefined {
         return (
@@ -40,16 +40,16 @@ export class UserDatabase extends BaseDataBase {
             `)
         } catch (err) {
 
-            throw new NotFoundError("Erro ao inserir novo usuário")
+            throw new Error(err.message || err.mysqlmessage);
         }
     }
     public async getUserById(id: string): Promise<User | undefined> {
         try {
             const result = await super.getConnection().raw(`
 
-             SELECT *  
-             FROM ${this.table}
-             WHERE id = '${id}'
+                SELECT *  
+                FROM ${this.table}
+                WHERE id = '${id}'
 
             `);
             return this.UserFromUserModel(result[0][0]);
@@ -119,7 +119,7 @@ export class UserDatabase extends BaseDataBase {
 
              if(Newrole.getRole() !== "admin")  {
 
-                  await this.getConnection().raw(`
+                  await super.getConnection().raw(`
                     UPDATE ${this.table}
                     SET is_approved = 0
                     WHERE role = "${role}"
@@ -161,8 +161,7 @@ export class UserDatabase extends BaseDataBase {
         //    return this.UserFromUserModel(queryData[0][0])
 
         }  catch (err) {
-            console.log(err)
-
+          
             throw new NotFoundError("User not found")
         }
        

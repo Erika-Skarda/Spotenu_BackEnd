@@ -57,11 +57,19 @@ export class UserBusiness {
 
         const hashPassword = await this.hashGenerator.hash(password)
         
-        const user = new User (id, name, email, nickname, hashPassword, User.mapStringToUserType(role), description_band)
+        const user = new User (
+            id, 
+            name, 
+            email, 
+            nickname, 
+            hashPassword, 
+            User.mapStringToUserType(role), 
+            description_band
+          )
 
         await this.userDatabase.createUser(user)
 
-        if(UserRole.ADMIN !== "admin") {
+        if(role !== "admin") {
 
               await this.userDatabase.getUserByRole(id, role)
         }
@@ -85,12 +93,14 @@ export class UserBusiness {
 
       throw new InvalidParameterError("Missing input");
     }
+
     if(emailORPassword) {
 
       const email = await this.userDatabase.getUserByEmail(emailORPassword);
       const nickname = await this.userDatabase.getUserByNickname(emailORPassword);
       
       if(email) { 
+
         const isPasswordCorrect = await this.hashGenerator.compare(
               password, 
               email.getPassword()
@@ -98,18 +108,19 @@ export class UserBusiness {
   
             if(!isPasswordCorrect) {
 
-                throw new InvalidParameterError("Somethings wrong")
+                throw new InvalidParameterError("Inavalid input");
+
+            } else {
+              const token = await this.auth.generateToken({
+
+                id:email.getId(), 
+                role:email.getRole()
+              })
+            
+              return{ Access_token: token } 
             }
-            const token = await this.auth.generateToken({
 
-              id:email.getId(), 
-              role:email.getRole()
-            })
-  
-            return{ Access_token: token } 
-          
-
-      } else if(nickname) {
+      } else if (nickname) {
         const isPasswordCorrect = await this.hashGenerator.compare(
           password, 
           nickname.getPassword()
@@ -117,21 +128,27 @@ export class UserBusiness {
 
         if(!isPasswordCorrect) {
 
-            throw new InvalidParameterError("Somethings wrong")
-        }
+            throw new InvalidParameterError("Somethings wrong");
 
-  
-        const token = await this.auth.generateToken({
+        } else {const token = await this.auth.generateToken({
 
             id:nickname.getId(), 
             role:nickname.getRole()
+
           })
 
           return{ Access_token: token } 
         }
-
-      }
+  
         
+
+        } else {
+
+          throw new InvalidParameterError("Invalid input")
+
+
+        }
+      }       
     }
 
     public async approveBand(id: string) {
@@ -147,6 +164,5 @@ export class UserBusiness {
       const bandNmae = await this.userDatabase.getUserById(id)
 
        return {Banda: bandNmae.getName()}
-    }
-    
+    }    
 }

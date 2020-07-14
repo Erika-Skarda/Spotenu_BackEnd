@@ -10,8 +10,7 @@ import { UserRole } from "../Model/UserModel";
 import { Unauthorized } from "../Errors/Unauthorized";
 
 export class UserController extends BaseDataBase {
-    protected table: string;
-
+    
     private static UserBusiness = new UserBusiness (
         new UserDatabase (),
         new Authenticator(),
@@ -35,6 +34,17 @@ export class UserController extends BaseDataBase {
 
             }
 
+            if(req.body.role === "admin" ) {
+
+                const token = req.headers.authorization as string;
+                const verifyToken = new Authenticator().getData(token);
+                
+                if(verifyToken.role !== UserRole.ADMIN) {
+
+                    throw new Unauthorized("You can't do this") 
+                }
+            }
+            
             const userInfo = await UserController.UserBusiness.signup(
                 newUser.name,
                 newUser.email,
@@ -58,24 +68,27 @@ export class UserController extends BaseDataBase {
 
         try {
 
-            const emailORPassword = req.body.email || req.body.nickname
+         const emailOrNickname= req.body.email || req.body.nickname
 
-                const result = await UserController.UserBusiness.login(emailORPassword, req.body.password)
+            const result = await UserController.UserBusiness.login(
+                emailOrNickname, 
+                req.body.password
+            );
        
           res.status(200).send({ result });
 
         } catch (err) {
-
+ 
           res.status(err.errorCode || 400).send({ message: err.message || err.mysqlmessage} )
         }
 
-        // await this.destroyConnection()
+         await this.destroyConnection()
     }
     public async approveBand(req:Request, res:Response) {
 
         try {
             
-            const idBandToApprove = req.body.id
+            const { id }= req.body;
 
             const accesToken = req.headers.authorization as string;
             const verifyToken = new Authenticator().getData(accesToken);
@@ -85,7 +98,7 @@ export class UserController extends BaseDataBase {
                 throw new Unauthorized("You can't do this") 
             }
 
-           const bandAprroved = await UserController.UserBusiness.approveBand(idBandToApprove)
+           const bandAprroved = await UserController.UserBusiness.approveBand(id)
 
             res.status(200).send(bandAprroved)
             
@@ -93,6 +106,6 @@ export class UserController extends BaseDataBase {
 
             res.status(error.errorCode || 400).send({ message: error.message})
         }
-        //await this.destroyConnection()
+        await this.destroyConnection()
     }
 }

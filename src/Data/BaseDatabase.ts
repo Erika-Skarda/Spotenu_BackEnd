@@ -6,7 +6,7 @@ dotenv.config();
 
 export abstract class BaseDataBase {
 
-  protected abstract table: string;
+  //protected abstract table: string;
 
   private static connection: Knex | null = null;
 
