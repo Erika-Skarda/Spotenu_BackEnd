@@ -2,10 +2,12 @@ import { BaseDataBase } from "./BaseDatabase";
 import { User, UserRole } from "../Model/UserModel";
 import { NotFoundError } from "../Errors/NotFoundError";
 import { GenericError } from "../Errors/GenericError";
+import { BandOrderDTO } from "../DTO/UserDTO";
+import { format } from "path";
 
 export class UserDatabase extends BaseDataBase {
 
-    table:string = "Spotenu_User";
+    protected table:string = "Spotenu_User";
 
     private UserFromUserModel(UserModel?:any) : User | undefined {
         return (
@@ -40,16 +42,16 @@ export class UserDatabase extends BaseDataBase {
             `)
         } catch (err) {
 
-            throw new NotFoundError("Erro ao inserir novo usuário")
+            throw new Error(err.message || err.mysqlmessage);
         }
     }
     public async getUserById(id: string): Promise<User | undefined> {
         try {
             const result = await super.getConnection().raw(`
 
-             SELECT *  
-             FROM ${this.table}
-             WHERE id = '${id}'
+                SELECT *  
+                FROM ${this.table}
+                WHERE id = '${id}'
 
             `);
             return this.UserFromUserModel(result[0][0]);
@@ -95,17 +97,7 @@ export class UserDatabase extends BaseDataBase {
             throw new NotFoundError("User not found")
         }
     }
-    public async getAllUsers(): Promise<User[]> {
-
-        const result = await super.getConnection().raw(`
-          SELECT * 
-          from ${this.table}
-        `);
-        return result[0].map((user: any) => {
-
-          return this.UserFromUserModel(user);
-        });
-      }
+ 
     public async getUserByRole(id:string, role:string) : Promise<any> {
 
         try {
@@ -119,7 +111,7 @@ export class UserDatabase extends BaseDataBase {
 
              if(Newrole.getRole() !== "admin")  {
 
-                  await this.getConnection().raw(`
+                  await super.getConnection().raw(`
                     UPDATE ${this.table}
                     SET is_approved = 0
                     WHERE role = "${role}"
@@ -161,11 +153,64 @@ export class UserDatabase extends BaseDataBase {
         //    return this.UserFromUserModel(queryData[0][0])
 
         }  catch (err) {
-            console.log(err)
-
+          
             throw new NotFoundError("User not found")
         }
        
     }
+    public async getUsersByTypeAndSortAndPage(
+            role:string, 
+            order: BandOrderDTO, 
+            usersPerPage:number, 
+            offset:number
+        ) : Promise<User[]> {
+
+        const allUsersByType = await super.getConnection()
+        .select("*")
+        .from(this.table)
+        .where({role:role})
+        .orderBy(order.by, order.type)
+        .limit(usersPerPage)
+        .offset(offset);
+
+        const usersArray: User[] = [];
+
+        if(allUsersByType) {
+
+            for(const user of allUsersByType) {
+
+                const userRole = new User (
+
+                    user.getId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getNickname(),
+                    user.getRole(),
+                    user.getApprove()
+
+                );
+
+                usersArray.push(userRole);
+            }
+            return usersArray;
+
+        } else {
+
+            return usersArray;
+
+        }
+    }
+    public async getUsersByRole(role: string): Promise<User[]> {
+
+        const result = await super.getConnection().raw(`
+          SELECT * 
+          WHERE role = "${role}"
+          from ${this.table}
+        `);
+          return result[0].map((user: any) => {
+
+          return this.UserFromUserModel(user);
+        });
+      }
 
 }

@@ -6,9 +6,9 @@ export class User {
         private id: string,
         private name: string,
         private email: string,
-        private nickname: string,
+        private nickname: string,   
         private password: string,
-        private role: UserRole,
+        private role: UserRole, 
         private description_band?: string,
         private is_approved?: boolean
     ) {}

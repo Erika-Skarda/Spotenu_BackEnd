@@ -6,7 +6,10 @@ export interface SignupInputDTO {
     role: string,
     description_band:string
 }
-
+export interface BandOrderDTO {
+    by: string;
+    type: string;
+  }
 export interface GetUserByIdInputDTO {
     id: string
 }
