@@ -2,6 +2,8 @@ import { BaseDataBase } from "./BaseDatabase";
 import { User, UserRole } from "../Model/UserModel";
 import { NotFoundError } from "../Errors/NotFoundError";
 import { GenericError } from "../Errors/GenericError";
+import { BandOrderDTO } from "../DTO/UserDTO";
+import { format } from "path";
 
 export class UserDatabase extends BaseDataBase {
 
@@ -95,17 +97,7 @@ export class UserDatabase extends BaseDataBase {
             throw new NotFoundError("User not found")
         }
     }
-    public async getAllUsers(): Promise<User[]> {
-
-        const result = await super.getConnection().raw(`
-          SELECT * 
-          from ${this.table}
-        `);
-        return result[0].map((user: any) => {
-
-          return this.UserFromUserModel(user);
-        });
-      }
+ 
     public async getUserByRole(id:string, role:string) : Promise<any> {
 
         try {
@@ -166,5 +158,59 @@ export class UserDatabase extends BaseDataBase {
         }
        
     }
+    public async getUsersByTypeAndSortAndPage(
+            role:string, 
+            order: BandOrderDTO, 
+            usersPerPage:number, 
+            offset:number
+        ) : Promise<User[]> {
+
+        const allUsersByType = await super.getConnection()
+        .select("*")
+        .from(this.table)
+        .where({role:role})
+        .orderBy(order.by, order.type)
+        .limit(usersPerPage)
+        .offset(offset);
+
+        const usersArray: User[] = [];
+
+        if(allUsersByType) {
+
+            for(const user of allUsersByType) {
+
+                const userRole = new User (
+
+                    user.getId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getNickname(),
+                    user.getRole(),
+                    user.getApprove()
+
+                );
+
+                usersArray.push(userRole);
+            }
+            return usersArray;
+
+        } else {
+
+            return usersArray;
+
+        }
+    }
+    public async getUsersByRole(role: string): Promise<User[]> {
+
+        const result = await super.getConnection().raw(`
+          SELECT * 
+          WHERE role = "${role}"
+          from ${this.table}
+        `);
+          return result[0].map((user: any) => {
+
+          return this.UserFromUserModel(user);
+        });
+      }
 
 }
