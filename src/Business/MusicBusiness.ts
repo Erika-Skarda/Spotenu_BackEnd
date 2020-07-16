@@ -36,7 +36,7 @@ export class MusicBusiness {
         }
         const idMusic = this.idGenerator.generate();
 
-        const album = await this.musicDatabase.getMusicById(idMusic, id_album);
+        const album = await this.musicDatabase.getMusicByName(name, id_album);
 
         if(album) {
 

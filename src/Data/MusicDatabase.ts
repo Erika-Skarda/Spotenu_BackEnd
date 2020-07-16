@@ -35,14 +35,14 @@ export class MusicDatabase extends BaseDataBase {
         }
     };
 
-    public async getMusicById(idMusic:string, idAlbum:string):Promise<Music | undefined> {
+    public async getMusicByName(music:string, idAlbum:string):Promise<Music | undefined> {
        
         try {
             const musicData = await super.getConnection().raw(`
 
                 SELECT *
                 FROM ${this.table}
-                WHERE id = "${idMusic}"
+                WHERE name = "${music}"
                 AND
                 WHERE id_album = "${idAlbum}"
             
