@@ -2,7 +2,6 @@ import { BaseDataBase } from "./BaseDatabase";
 import { Genre } from "../Model/GenreMusicModel"
 import { NotFoundError } from "../Errors/NotFoundError";
 
-
 export class GenreDatabase extends BaseDataBase {
 
     protected table:string = "Spotenu_Music_Genre";
@@ -67,6 +66,20 @@ export class GenreDatabase extends BaseDataBase {
             throw new Error(err.message || err.mysqlmessage);
         }
     }
+    public async getGenres(): Promise<any> {
+        try {
+            const result = await super.getConnection().raw(`
+                SELECT *
+                FROM ${this.table}
+            `);
+            return (result[0]).map((genre: any) => {
+                return this.Genre(genre);
+            });
+            
+        } catch (err) {
+            throw new NotFoundError("Genre not found")
+        };
+    };
 
 
 }

@@ -25,7 +25,7 @@ export class GenreController extends BaseDataBase {
 
             const newGenre: CreateGenreDTO = {
 
-                music_genre : req.body.music_genre
+                music_genre:req.body.music_genre
             };
 
             const accessToken = req.headers.authorization as string;
@@ -45,8 +45,31 @@ export class GenreController extends BaseDataBase {
 
         } catch(error) {
 
-            res.status(error.errorCode || 400).send({ message: error.message})
+            res.status(error.errorCode || 400).send({ message: error.message});
         }
-        await this.destroyConnection()
-    }
+        
+        await this.destroyConnection();
+    };
+
+    public async getGenre(req: Request, res: Response) {
+
+        try {
+            const token = req.headers.authorization as string
+            const verifyToken = new Authenticator().getData(token)
+
+            if (verifyToken.role !== UserRole.ADMIN && verifyToken.role !== UserRole.BANDA) {
+
+                throw new Error("You have no permission for see bands");   
+
+            };
+
+            const result = await GenreController.GenreBusiness.getGenres()
+
+            return res.status(200).send(result);
+
+        } catch (error) {
+            
+            res.status(error.errorCode || 400).send( {message: error.message})
+          };
+    }; 
 }

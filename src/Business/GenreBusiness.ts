@@ -19,7 +19,7 @@ export class GenreBusiness {
 
     public async createGenre (
         
-        music_genre: string
+        music_genre:string
     ) {
         if(!music_genre) {
 
@@ -47,6 +47,16 @@ export class GenreBusiness {
 
        }
 
-      }
+    };
+    public async getGenres() {
+
+        const result = await this.genreDatabase.getGenres();
+
+        if (!result) {
+            
+          throw new Error("None genres were found");
+        };
+        return result
+    };
     
 }
