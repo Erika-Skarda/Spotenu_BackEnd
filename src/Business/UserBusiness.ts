@@ -5,6 +5,9 @@ import { IdGenerator } from "../Services/IdGenerator";
 import { InvalidParameterError } from "../Errors/InvalidParamenterError";
 import { User, UserRole } from "../Model/UserModel";
 import { NotFoundError } from "../Errors/NotFoundError";
+import { BandOrderDTO } from "../DTO/UserDTO";
+import { GenericError } from "../Errors/GenericError";
+import { Unauthorized } from "../Errors/Unauthorized";
 
 export class UserBusiness {
 
@@ -100,8 +103,13 @@ export class UserBusiness {
       const nickname = await this.userDatabase.getUserByNickname(emailORPassword);
       
       if(email) { 
+        if(email.getRole() === UserRole.BANDA && email.getApprove() == false) {
 
-        const isPasswordCorrect = await this.hashGenerator.compare(
+          throw new Unauthorized("Wait bitch");
+
+        } else {
+
+          const isPasswordCorrect = await this.hashGenerator.compare(
               password, 
               email.getPassword()
             )
@@ -119,28 +127,36 @@ export class UserBusiness {
             
               return{ Access_token: token } 
             }
-
+       }
       } else if (nickname) {
-        const isPasswordCorrect = await this.hashGenerator.compare(
-          password, 
-          nickname.getPassword()
-        )
 
-        if(!isPasswordCorrect) {
+        if(nickname.getRole() === UserRole.BANDA && nickname.getApprove() === false) {
 
-            throw new InvalidParameterError("Somethings wrong");
+          throw new Unauthorized("Wait to be approved!");
 
-        } else {const token = await this.auth.generateToken({
+        } else {
+          const isPasswordCorrect = await this.hashGenerator.compare(
+            password, 
+            nickname.getPassword()
+          );
 
-            id:nickname.getId(), 
-            role:nickname.getRole()
 
-          })
 
-          return{ Access_token: token } 
-        }
+          if(!isPasswordCorrect) {
+
+              throw new InvalidParameterError("Somethings wrong");
+
+          } else {const token = await this.auth.generateToken({
+
+              id:nickname.getId(), 
+              role:nickname.getRole()
+
+            })
+
+            return{ Access_token: token } 
+          }
   
-        
+        }
 
         } else {
 
@@ -164,5 +180,22 @@ export class UserBusiness {
       const bandNmae = await this.userDatabase.getUserById(id)
 
        return {Banda: bandNmae.getName()}
-    }    
+    }  
+    public async getUsersByTypeAndSortAndPage(role:string, order:BandOrderDTO, page:number) {
+      const usersPerPage = 5
+      let offset = usersPerPage * (page - 1)
+      
+      return await this.userDatabase.getUsersByTypeAndSortAndPage(role, order, usersPerPage, offset)
+    }
+    public async getUsersByRole(role: string) {
+
+      const result = await this.userDatabase.getUsersByRole(role)
+
+      if (!result) {
+
+        throw new GenericError("Role not found");
+      }
+      return result
+    }
+
 }

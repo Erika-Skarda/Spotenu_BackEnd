@@ -3,7 +3,7 @@ import { User, UserRole } from "../Model/UserModel";
 import { NotFoundError } from "../Errors/NotFoundError";
 import { GenericError } from "../Errors/GenericError";
 import { BandOrderDTO } from "../DTO/UserDTO";
-import { format } from "path";
+
 
 export class UserDatabase extends BaseDataBase {
 
@@ -109,7 +109,7 @@ export class UserDatabase extends BaseDataBase {
             
              const Newrole = this.UserFromUserModel(result[0][0]);
 
-             if(Newrole.getRole() !== "admin")  {
+             if(Newrole.getRole() === UserRole.ADMIN)  {
 
                   await super.getConnection().raw(`
                     UPDATE ${this.table}
@@ -166,50 +166,56 @@ export class UserDatabase extends BaseDataBase {
         ) : Promise<User[]> {
 
         const allUsersByType = await super.getConnection()
-        .select("*")
+        .select("name", "nickname","email", "is_approved")
         .from(this.table)
         .where({role:role})
         .orderBy(order.by, order.type)
         .limit(usersPerPage)
         .offset(offset);
 
-        const usersArray: User[] = [];
+        return allUsersByType.map((user: any) => {
 
-        if(allUsersByType) {
+            return this.UserFromUserModel(user);
+        });
 
-            for(const user of allUsersByType) {
+        //const usersArray: User[] = [];
 
-                const userRole = new User (
+        // if(allUsersByType) {
 
-                    user.getId(),
-                    user.getName(),
-                    user.getEmail(),
-                    user.getNickname(),
-                    user.getRole(),
-                    user.getApprove()
+        //      for(const user of allUsersByType) {
 
-                );
+        //          const userRole = new User (
 
-                usersArray.push(userRole);
-            }
-            return usersArray;
+        //            user.getId(),
+        //            user.getName(),
+        //            user.getEmail(),
+        //            user.getNickname(),
+        //            user.getRole(),
+        //            user.getApprove()
 
-        } else {
+        //         );
 
-            return usersArray;
+        //        usersArray.push(userRole);
+        //      }
+        //     return usersArray;
 
-        }
+        // } else {
+
+        //     return usersArray;
+
+        // }
     }
     public async getUsersByRole(role: string): Promise<User[]> {
 
         const result = await super.getConnection().raw(`
-          SELECT * 
+          SELECT name, email, nickname, is_approved
+          FROM ${this.table}
           WHERE role = "${role}"
-          from ${this.table}
+         
         `);
           return result[0].map((user: any) => {
 
-          return this.UserFromUserModel(user);
+            return this.UserFromUserModel(user);
         });
       }
 
