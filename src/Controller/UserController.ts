@@ -69,7 +69,7 @@ export class UserController extends BaseDataBase {
 
         try {
 
-         const emailOrNickname= req.body.email || req.body.nickname
+         const emailOrNickname= req.body.emailOrNickname
 
             const result = await UserController.UserBusiness.login(
                 emailOrNickname, 
@@ -79,11 +79,11 @@ export class UserController extends BaseDataBase {
           res.status(200).send({ result });
 
         } catch (err) {
- 
-          res.status(err.errorCode || 400).send({ message: err.message || err.mysqlmessage} )
+            console.log(err)
+            res.status(err.errorCode || 400).send({ message: err.message || err.mysqlmessage} )
         }
 
-         await this.destroyConnection()
+         await BaseDataBase.destroyConnection()
     }
     public async approveBand(req:Request, res:Response) {
 
@@ -171,6 +171,24 @@ export class UserController extends BaseDataBase {
         } catch (error) {
             res.status(error.errorCode || 400).send( {message: error.message})
           }
+    }
+    public async getAllBands(req: Request, res: Response) {
+        const token = req.headers.authorization || req.headers.Authorization as string
+        const verifyAdminToken = new Authenticator().getData(token)
+
+        if (verifyAdminToken.role !== UserRole.ADMIN) {
+            
+            throw new Error("You have no permission for see bands");              
+        };
+        try {
+            const bands = await UserController.UserBusiness.getAllBands()
+            
+            res.status(200).send(bands)
+        }
+        catch (err) {
+            await this.destroyConnection()
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }
     }
 
     

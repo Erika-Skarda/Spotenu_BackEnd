@@ -30,13 +30,13 @@ export class UserDatabase extends BaseDataBase {
             await this.getConnection().raw( `
                 INSERT INTO ${this.table} (id, name, email, nickname, password, role, description_band)
                 VALUES(
-                "${newUser.getId()}",
-                "${newUser.getName()}",
-                "${newUser.getEmail()}",
-                "${newUser.getNickname()}",
-                "${newUser.getPassword()}",
-                "${newUser.getRole()}",
-                "${newUser.getDescription()}"
+                    "${newUser.getId()}",
+                    "${newUser.getName()}",
+                    "${newUser.getEmail()}",
+                    "${newUser.getNickname()}",
+                    "${newUser.getPassword()}",
+                    "${newUser.getRole()}",
+                    "${newUser.getDescription()}"
                 )
             
             `)
@@ -62,7 +62,7 @@ export class UserDatabase extends BaseDataBase {
         }
       }
     public async getUserByEmail(email:string): Promise<User | undefined> {
-        try{
+  
 
             const dataInfo = await super.getConnection().raw(`
 
@@ -74,13 +74,10 @@ export class UserDatabase extends BaseDataBase {
 
             return this.UserFromUserModel(dataInfo[0][0]);
 
-        } catch (err) {
-
-            throw new NotFoundError("User not found")
-        }
+     
     }
     public async getUserByNickname(nickname:string): Promise<User | undefined> {
-        try{
+      
 
             const dataInfo = await super.getConnection().raw(`
 
@@ -92,10 +89,7 @@ export class UserDatabase extends BaseDataBase {
 
             return this.UserFromUserModel(dataInfo[0][0]);
 
-        } catch (err) {
-
-            throw new NotFoundError("User not found")
-        }
+       
     }
  
     public async getUserByRole(id:string, role:string) : Promise<any> {
@@ -211,6 +205,19 @@ export class UserDatabase extends BaseDataBase {
           SELECT name, email, nickname, is_approved
           FROM ${this.table}
           WHERE role = "${role}"
+         
+        `);
+          return result[0].map((user: any) => {
+
+            return this.UserFromUserModel(user);
+        });
+      }
+      public async getAllBands(): Promise<User[]> {
+
+        const result = await super.getConnection().raw(`
+          SELECT name, email, nickname, is_approved
+          FROM ${this.table}
+          WHERE role = "banda"
          
         `);
           return result[0].map((user: any) => {

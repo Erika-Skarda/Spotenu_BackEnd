@@ -96,11 +96,13 @@ export class UserBusiness {
 
       throw new InvalidParameterError("Missing input");
     }
-
+    console.log(emailORPassword, "Olha aqui")
     if(emailORPassword) {
 
       const email = await this.userDatabase.getUserByEmail(emailORPassword);
       const nickname = await this.userDatabase.getUserByNickname(emailORPassword);
+
+      console.log(email, nickname , "lendo as variáveis-email e senha")
       
       if(email) { 
         if(email.getRole() === UserRole.BANDA && email.getApprove() == false) {
@@ -139,8 +141,6 @@ export class UserBusiness {
             password, 
             nickname.getPassword()
           );
-
-
 
           if(!isPasswordCorrect) {
 
@@ -197,5 +197,12 @@ export class UserBusiness {
       }
       return result
     }
+    public async getAllBands() {
+   
+      const bands = await this.userDatabase.getAllBands()
+      
+      return bands
+      
+  }
 
 }
