@@ -72,18 +72,18 @@ export class UserController extends BaseDataBase {
          const emailOrNickname= req.body.emailOrNickname
 
             const result = await UserController.UserBusiness.login(
-                emailOrNickname, 
+                req.body.emailOrNickname, 
                 req.body.password
             );
        
-          res.status(200).send({ result });
+          res.status(200).send( result );
 
         } catch (err) {
             console.log(err)
             res.status(err.errorCode || 400).send({ message: err.message || err.mysqlmessage} )
         }
 
-         await BaseDataBase.destroyConnection()
+         //await BaseDataBase.destroyConnection()
     }
     public async approveBand(req:Request, res:Response) {
 

@@ -87,24 +87,24 @@ export class UserBusiness {
     }
     public async login( 
        
-        emailORPassword:string,
+      emailOrNickname:string,
         password: string
 
         ) {
 
-    if (!emailORPassword) {
+    if (!emailOrNickname) {
 
       throw new InvalidParameterError("Missing input");
     }
-    console.log(emailORPassword, "Olha aqui")
-    if(emailORPassword) {
+    
+    if(emailOrNickname) {
 
-      const email = await this.userDatabase.getUserByEmail(emailORPassword);
-      const nickname = await this.userDatabase.getUserByNickname(emailORPassword);
+      const email = await this.userDatabase.getUserByEmail(emailOrNickname);
+      const nickname = await this.userDatabase.getUserByNickname(emailOrNickname);
 
       console.log(email, nickname , "lendo as variáveis-email e senha")
       
-      if(email) { 
+      if(email && email.getEmail() === emailOrNickname) { 
         if(email.getRole() === UserRole.BANDA && email.getApprove() == false) {
 
           throw new Unauthorized("Wait bitch");
@@ -130,7 +130,7 @@ export class UserBusiness {
               return{ Access_token: token } 
             }
        }
-      } else if (nickname) {
+      } else if (nickname && nickname.getNickname() === emailOrNickname) {
 
         if(nickname.getRole() === UserRole.BANDA && nickname.getApprove() === false) {
 

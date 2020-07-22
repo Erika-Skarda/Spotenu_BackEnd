@@ -203,6 +203,7 @@ export class UserDatabase extends BaseDataBase {
 
         const result = await super.getConnection().raw(`
           SELECT name, email, nickname, is_approved
+
           FROM ${this.table}
           WHERE role = "${role}"
          
@@ -215,7 +216,7 @@ export class UserDatabase extends BaseDataBase {
       public async getAllBands(): Promise<User[]> {
 
         const result = await super.getConnection().raw(`
-          SELECT name, email, nickname, is_approved
+          SELECT name, email, nickname, is_approved, description_band
           FROM ${this.table}
           WHERE role = "banda"
          
