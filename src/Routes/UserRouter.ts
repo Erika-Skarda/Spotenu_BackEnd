@@ -9,3 +9,4 @@ userRouter.put("/approve", new UserController().approveBand);
 userRouter.get("/bandpage", new UserController().getUsersByTypeAndSortAndPage);
 userRouter.get("/role", new UserController().getUsersByRole);
 userRouter.get("/band", new UserController().getAllBands);
+userRouter.get("/id", new UserController().getUserById);

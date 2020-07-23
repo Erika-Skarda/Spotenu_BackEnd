@@ -59,10 +59,10 @@ export class UserController extends BaseDataBase {
             res.status(200).send(userInfo)
 
         } catch(error) {
-
+            console.log("Erro do sign ip:",error)
             res.status(error.errorCode || 400).send({ message: error.message})
         }
-        await this.destroyConnection();
+        await BaseDataBase.destroyConnection();
 
     }
     public async login(req: Request, res: Response) {
@@ -77,6 +77,7 @@ export class UserController extends BaseDataBase {
             );
        
           res.status(200).send( result );
+        
 
         } catch (err) {
             console.log(err)
@@ -89,7 +90,7 @@ export class UserController extends BaseDataBase {
 
         try {
             
-            const { id }= req.body;
+            const { id } = req.body;
 
             const accesToken = req.headers.authorization as string;
             const verifyToken = new Authenticator().getData(accesToken);
@@ -175,21 +176,40 @@ export class UserController extends BaseDataBase {
     public async getAllBands(req: Request, res: Response) {
         const token = req.headers.authorization || req.headers.Authorization as string
         const verifyAdminToken = new Authenticator().getData(token)
-
-        if (verifyAdminToken.role !== UserRole.ADMIN) {
+      
+        try { 
+            
+           if (verifyAdminToken.role !== UserRole.ADMIN) {
             
             throw new Error("You have no permission for see bands");              
         };
-        try {
             const bands = await UserController.UserBusiness.getAllBands()
             
             res.status(200).send(bands)
         }
         catch (err) {
-            await this.destroyConnection()
+          
             res.status(err.errorCode || 400).send({ message: err.message });
         }
+        await BaseDataBase.destroyConnection();
+    };
+    public async getUserById(req: Request, res: Response) {
+        
+        try { 
+            
+            const token = req.headers.authorization || req.headers.Authorization as string
+            const verifyAdminToken = new Authenticator().getData(token)
+            
+            const idSearch =  req.body.id 
+            const id = await UserController.UserBusiness.getUserById(idSearch)
+            
+            res.status(200).send(id)
+        }
+        catch (err) {
+          
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }
+        await BaseDataBase.destroyConnection();
     }
-
     
 }

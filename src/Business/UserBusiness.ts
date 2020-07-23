@@ -72,7 +72,7 @@ export class UserBusiness {
 
         await this.userDatabase.createUser(user)
 
-        if(role !== "admin") {
+        if(role === UserRole.BANDA) {
 
               await this.userDatabase.getUserByRole(id, role)
         }
@@ -88,7 +88,7 @@ export class UserBusiness {
     public async login( 
        
       emailOrNickname:string,
-        password: string
+      password: string
 
         ) {
 
@@ -102,7 +102,7 @@ export class UserBusiness {
       const email = await this.userDatabase.getUserByEmail(emailOrNickname);
       const nickname = await this.userDatabase.getUserByNickname(emailOrNickname);
 
-      console.log(email, nickname , "lendo as variáveis-email e senha")
+      console.log(email, nickname , emailOrNickname, "lendo as variáveis-email e senha")
       
       if(email && email.getEmail() === emailOrNickname) { 
         if(email.getRole() === UserRole.BANDA && email.getApprove() == false) {
@@ -127,7 +127,7 @@ export class UserBusiness {
                 role:email.getRole()
               })
             
-              return{ Access_token: token } 
+              return{ Access_token: token, Role:email.getRole() } 
             }
        }
       } else if (nickname && nickname.getNickname() === emailOrNickname) {
@@ -153,7 +153,7 @@ export class UserBusiness {
 
             })
 
-            return{ Access_token: token } 
+            return{ Access_token: token , Role:nickname.getRole() } 
           }
   
         }
@@ -196,13 +196,23 @@ export class UserBusiness {
         throw new GenericError("Role not found");
       }
       return result
-    }
+    };
     public async getAllBands() {
    
       const bands = await this.userDatabase.getAllBands()
       
       return bands
       
-  }
+  };
+  public async getUserById(id:string) {
+
+    const result = await this.userDatabase.getUserById(id)
+
+    if (!result) {
+
+      throw new GenericError("id not found");
+    }
+    return result
+  };
 
 }

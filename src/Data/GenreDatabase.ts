@@ -65,21 +65,17 @@ export class GenreDatabase extends BaseDataBase {
 
             throw new Error(err.message || err.mysqlmessage);
         }
-    }
+    };
     public async getGenres(): Promise<any> {
         try {
             const result = await super.getConnection().raw(`
-                SELECT *
+                SELECT  *
                 FROM ${this.table}
             `);
-            return (result[0]).map((genre: any) => {
-                return this.Genre(genre);
-            });
+            return (result[0]).map((genre: any) => this.Genre(genre))
             
         } catch (err) {
             throw new NotFoundError("Genre not found")
-        };
+        }
     };
-
-
 }

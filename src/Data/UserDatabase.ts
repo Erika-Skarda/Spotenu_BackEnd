@@ -103,12 +103,13 @@ export class UserDatabase extends BaseDataBase {
             
              const Newrole = this.UserFromUserModel(result[0][0]);
 
-             if(Newrole.getRole() === UserRole.ADMIN)  {
+             if(Newrole.getRole() === UserRole.BANDA)  {
 
                   await super.getConnection().raw(`
                     UPDATE ${this.table}
                     SET is_approved = 0
-                    WHERE role = "${role}"
+                    WHERE role=${role}
+                
                 `);
              }    
 
@@ -213,12 +214,13 @@ export class UserDatabase extends BaseDataBase {
             return this.UserFromUserModel(user);
         });
       }
-      public async getAllBands(): Promise<User[]> {
+    public async getAllBands(): Promise<User[]> {
 
         const result = await super.getConnection().raw(`
           SELECT name, email, nickname, is_approved, description_band
           FROM ${this.table}
           WHERE role = "banda"
+       
          
         `);
           return result[0].map((user: any) => {
