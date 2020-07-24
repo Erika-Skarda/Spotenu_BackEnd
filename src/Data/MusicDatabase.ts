@@ -47,7 +47,7 @@ export class MusicDatabase extends BaseDataBase {
                 WHERE id_album = "${idAlbum}"
             
             `)
-            return (musicData[0][0]).length;
+            return this.MusicFromModel(musicData[0]);
             
 
         }  catch (err) {

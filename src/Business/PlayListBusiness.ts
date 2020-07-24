@@ -52,29 +52,43 @@ export class PlayListBusiness {
     public async addMusic(
 
         id_playlist: string,
-        id_music: string
+        id_music: string,
+        createdByOrCollab: string
     ) {
 
-    const verifyPlaylist = await this.playlistDatabase.getPlaylistById(id_playlist)
+        const verifyPlaylist = await this.playlistDatabase.getPlaylistById(id_playlist)
 
-    if(!verifyPlaylist) {
+        if(!verifyPlaylist) {
 
-        throw new NotFoundError("Try again, this playlist doesn't exist")
+            throw new NotFoundError("Try again, this playlist doesn't exist")
+        }
+        
+        const verifyMusic = await this.musicDatabase.getMusicId(id_music)
+        
+        if(!verifyMusic) {
 
-    }
+            throw new NotFoundError("Try again, this music doesn't exist")
+        }
+        const verifyCreatedBy = await this.playlistDatabase.getPlaylistsByCreatedBy(createdByOrCollab)
+        
+        if(verifyCreatedBy) {
 
-    const verifyMusic = await this.musicDatabase.getMusicId(id_music)
-    
-    if(!verifyMusic) {
+            await this.playlistDatabase.addMusic(id_playlist, id_music) 
+            
+        }
+        const verifyCollab = await this.playlistDatabase.getPlaylistsByCreatedBy(createdByOrCollab)
+        
+        if(verifyPlaylist.getCollaborative() === false) {
 
-        throw new NotFoundError("Try again, this music doesn't exist")
+            throw new Unauthorized("You can't do this!")
 
-    }
+        } else {
 
-    
+            if(verifyCollab) {
 
-    }
+            await this.playlistDatabase.addMusic(id_playlist, id_music)   
 
-
-
-}
+            }
+        }
+    };
+}    

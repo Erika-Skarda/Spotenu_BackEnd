@@ -9,6 +9,7 @@ import { UserController } from "./UserController";
 import { UserRole } from "../Model/UserModel";
 import { Unauthorized } from "../Errors/Unauthorized";
 import { CreatePlayListDTO } from "../DTO/PlayListDTO";
+import { BaseDataBase } from "../Data/BaseDatabase";
 
 export class PlayListController {
 
@@ -43,7 +44,30 @@ export class PlayListController {
             
             res.status(err.errorCode || 400).send({ message: err.message });
         }
-        await UserDatabase.destroyConnection()
+        await BaseDataBase.destroyConnection()
      
     };
+    public async addMusic(req:Request, res:Response) {
+
+        try {
+
+            const token = req.headers.authorization || req.headers.Authorization as string
+            const tokenAuth = new Authenticator().getData(token)
+
+            const { id_playlist, id_music } = req.body
+
+            if(tokenAuth.role !== UserRole.OUVINTE_PAGANTE) {
+
+                throw new Unauthorized("Unauthorized!!!!!")
+            };
+
+            const createdBy = await PlayListController.PlaylistBusiness.addMusic(id_playlist, id_music, tokenAuth.id)
+
+            res.status(200).send({ message: "You have successfully added the music" })
+
+        } catch (error) {
+
+            res.status(error.errorCode || 400).send( {message: error.message})
+          }
+    }
 }

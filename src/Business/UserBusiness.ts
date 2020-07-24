@@ -181,29 +181,32 @@ export class UserBusiness {
 
        return {Banda: bandNmae.getName()}
     }  
-    public async getUsersByTypeAndSortAndPage(role:string, order:BandOrderDTO, page:number) {
-      const usersPerPage = 5
-      let offset = usersPerPage * (page - 1)
-      
-      return await this.userDatabase.getUsersByTypeAndSortAndPage(role, order, usersPerPage, offset)
+  public async getUsersByTypeAndSortAndPage(role:string, order:BandOrderDTO, page:number) {
+    const usersPerPage = 5
+    let offset = usersPerPage * (page - 1)
+    
+    return await this.userDatabase.getUsersByTypeAndSortAndPage(role, order, usersPerPage, offset)
+  };
+
+  public async getUsersByRole(role: string) {
+
+    const result = await this.userDatabase.getUsersByRole(role)
+
+    if (!result) {
+
+      throw new GenericError("Role not found");
     }
-    public async getUsersByRole(role: string) {
+    return result
+  };
 
-      const result = await this.userDatabase.getUsersByRole(role)
-
-      if (!result) {
-
-        throw new GenericError("Role not found");
-      }
-      return result
-    };
-    public async getAllBands() {
+  public async getAllBands() {
    
-      const bands = await this.userDatabase.getAllBands()
+    const bands = await this.userDatabase.getAllBands()
       
-      return bands
+    return bands
       
   };
+
   public async getUserById(id:string) {
 
     const result = await this.userDatabase.getUserById(id)
@@ -214,6 +217,7 @@ export class UserBusiness {
     }
     return result
   };
+
   public async updateName(id:string, name: string) {
 
     const verify = await this.userDatabase.getUserById(id)
@@ -225,6 +229,7 @@ export class UserBusiness {
 
     await this.userDatabase.updateName(id, name)
   };
+
   public async updateOuvinteNaoPagante(id: string) {
 
     const user = await this.userDatabase.getUserById(id)
@@ -237,7 +242,7 @@ export class UserBusiness {
     }
     
     await this.userDatabase.updateOuvinte(id)
-}
+  };
 
   public async blockUser(id: string) {
     
@@ -254,6 +259,6 @@ export class UserBusiness {
     }       
 
     await this.userDatabase.blockUser(id)
-}
+  };
 
 }

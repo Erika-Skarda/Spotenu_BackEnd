@@ -8,6 +8,7 @@ export class PlayListDatabase extends BaseDataBase {
 
     protected table_playlist: string = "Spotenu_playlist";
     protected table_playlist_music: string = "Spotenu_playlist_music";
+    protected table_Spotenu_follower_playlist: string = "Spotenu_follower_playlist"
 
     private PlayListFromModel (PlayListModel?:any) : Playlist | undefined {
         return (
@@ -43,7 +44,7 @@ export class PlayListDatabase extends BaseDataBase {
         const result = await super.getConnection()
             .select("*")
             .from(this.table_playlist)
-            .where({ id })
+            .where({ id : id})
             
         return this.PlayListFromModel(result[0])
     }
@@ -59,4 +60,27 @@ export class PlayListDatabase extends BaseDataBase {
             })
             .into(this.table_playlist_music)        
     };
+    public async getPlaylistsByCreatedBy(id: string): Promise<Playlist[]> {
+        
+        const result = await super.getConnection().raw(`
+            SELECT * 
+            FROM ${this.table_playlist}
+            WHERE createdBy = "${id}"
+            ORDER BY name
+            GROUP BY name
+        `)
+        return result[0].map((playlist: any) => this.PlayListFromModel(playlist))
+    };
+    public async getPlaylistsByCollabId(id: string): Promise<Playlist[]> {
+        
+        const result = await super.getConnection().raw(`
+            SELECT * 
+            FROM ${this.table_Spotenu_follower_playlist}
+            WHERE id_collab = "${id}"
+            ORDER BY name
+            GROUP BY name
+        `)
+        return result[0].map((playlist: any) => this.PlayListFromModel(playlist))
+    };
+    
 }

@@ -55,7 +55,7 @@ export class AlbumDatabase extends BaseDataBase {
 
                 SELECT *
                 FROM ${this.table}
-                WHERE id = "${idAlbum}"
+                WHERE id ="${idAlbum}"
             
             `)
             return this.AlbumFromModel(albumData[0][0])

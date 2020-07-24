@@ -218,7 +218,7 @@ export class UserController extends BaseDataBase {
             const verifyToken = new Authenticator().getData(token)
             const newName = req.body.name;
 
-            await UserController.UserBusiness.updateName(newName, verifyToken.id)
+            await UserController.UserBusiness.updateName(verifyToken.id, newName)
             
             res.status(200).send({
                 message: "Nome do usuário alterado com sucesso!"

@@ -7,6 +7,7 @@ import { InvalidParameterError } from "../Errors/InvalidParamenterError";
 import { AlbumDatabase } from "../Data/AlbumDatabase";
 import { GenericError } from "../Errors/GenericError";
 import { Music } from "../Model/MusicModel";
+import { NotFoundError } from "../Errors/NotFoundError";
 
 export class MusicBusiness {
 
@@ -28,21 +29,22 @@ export class MusicBusiness {
             throw new InvalidParameterError("Missing input")
 
         };
-        const verifyAlbum = await this.albumDatabase.getAlbumById(id_album);
+        // const verifyAlbum = await this.albumDatabase.getAlbumById(id_album);
 
-        if(!verifyAlbum) {
+        // if(!verifyAlbum) {
 
+        //     throw new NotFoundError("Try again, this playlist doesn't exist")
 
-        }
+        // }
         const idMusic = this.idGenerator.generate();
 
-        const album = await this.musicDatabase.getMusicByName(name, id_album);
+        // const album = await this.musicDatabase.getMusicByName(name, id_album);
 
-        if(album) {
+        // if(album) {
 
-            throw new GenericError("This song has already been added!!!!")
+        //     throw new GenericError("This song has already been added!!!!")
 
-        } else {
+        // } else {
 
             const newMusic = new Music(
 
@@ -53,7 +55,7 @@ export class MusicBusiness {
 
             const music = await this.musicDatabase.createMusic(newMusic);
             return music;
-        }
+        // }
 
 
     }

@@ -9,6 +9,6 @@
     "module": "commonjs",
     "esModuleInterop": true,
   },
-  "include": ["src/**/*", "jest.config.js"],
+  "include": ["src/**/*", "jest.config.js", "webpack.config.js"],
   "exclude": ["node_modules"]
 }

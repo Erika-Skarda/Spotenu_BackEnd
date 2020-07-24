@@ -7,8 +7,7 @@ import { albumRouter } from "./Routes/AlbumRouter";
 import { musicRouter } from "./Routes/MusicRouter";
 import cors from "cors";
 import { playListRouter } from "./Routes/PlayListRouter";
-//AKIAI7HBIS3INIDGPL2A
-//U4vwODcH9yIRqsATQViH0GwB2tGqtiFEUjLMqnqV
+
 dotenv.config();
 
 export const app = express();
@@ -24,11 +23,16 @@ app.use("/album", albumRouter);
 app.use("/music", musicRouter);
 app.use("/playlist", playListRouter);
 
-const server = app.listen(process.env.PORT || 3000, () => {
-  if (server) {
-    const address = server.address() as AddressInfo;
-    console.log(`Server is running in http://localhost:${address.port}`);
-  } else {
-    console.error(`Failure upon starting server.`);
-  }
-});
+if(process.env.NODE_ENV !== "serveless") {
+  const server = app.listen(process.env.PORT || 3000, () => {
+      if(server) {
+          const address = server.address() as AddressInfo
+          console.log(`Server is running in http://localhost:${address.port}`)
+      } else {
+          console.log(`Failure`)
+      }
+  })  
+}
+//AKIAI7HBIS3INIDGPL2A
+//U4vwODcH9yIRqsATQViH0GwB2tGqtiFEUjLMqnqV
+//https://7nok4l82c2.execute-api.us-east-1.amazonaws.com/dev
