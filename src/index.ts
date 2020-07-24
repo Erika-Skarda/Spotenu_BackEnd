@@ -6,10 +6,12 @@ import { genreRouter } from "./Routes/GenreRouter";
 import { albumRouter } from "./Routes/AlbumRouter";
 import { musicRouter } from "./Routes/MusicRouter";
 import cors from "cors";
-
+import { playListRouter } from "./Routes/PlayListRouter";
+//AKIAI7HBIS3INIDGPL2A
+//U4vwODcH9yIRqsATQViH0GwB2tGqtiFEUjLMqnqV
 dotenv.config();
 
-const app = express();
+export const app = express();
 app.use(cors({
   origin:true
 }));
@@ -20,6 +22,7 @@ app.use("/user", userRouter);
 app.use("/genre", genreRouter);
 app.use("/album", albumRouter);
 app.use("/music", musicRouter);
+app.use("/playlist", playListRouter);
 
 const server = app.listen(process.env.PORT || 3000, () => {
   if (server) {

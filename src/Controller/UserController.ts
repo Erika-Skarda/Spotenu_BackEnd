@@ -84,7 +84,7 @@ export class UserController extends BaseDataBase {
             res.status(err.errorCode || 400).send({ message: err.message || err.mysqlmessage} )
         }
 
-         //await BaseDataBase.destroyConnection()
+         await BaseDataBase.destroyConnection()
     }
     public async approveBand(req:Request, res:Response) {
 
@@ -96,19 +96,19 @@ export class UserController extends BaseDataBase {
             const verifyToken = new Authenticator().getData(accesToken);
 
             if(verifyToken.role !== UserRole.ADMIN) {
-
+ 
                 throw new Unauthorized("You can't do this") 
             }
 
-           const bandAprroved = await UserController.UserBusiness.approveBand(id)
+            await UserController.UserBusiness.approveBand(id)
 
-            res.status(200).send(bandAprroved)
+            res.status(200).send({message:"aprovada com sucesso"})
             
         }  catch(error) {
 
             res.status(error.errorCode || 400).send({ message: error.message})
         }
-        await this.destroyConnection()
+        await BaseDataBase.destroyConnection()
     }
 
     public async getUsersByTypeAndSortAndPage(req: Request, res:Response) {
@@ -172,7 +172,7 @@ export class UserController extends BaseDataBase {
         } catch (error) {
             res.status(error.errorCode || 400).send( {message: error.message})
           }
-    }
+    };
     public async getAllBands(req: Request, res: Response) {
         const token = req.headers.authorization || req.headers.Authorization as string
         const verifyAdminToken = new Authenticator().getData(token)
@@ -210,6 +210,66 @@ export class UserController extends BaseDataBase {
             res.status(err.errorCode || 400).send({ message: err.message });
         }
         await BaseDataBase.destroyConnection();
+    };
+    public async updateName(req: Request, res: Response) {
+        
+        try {
+            const token = req.headers.authorization || req.headers.Authorization as string
+            const verifyToken = new Authenticator().getData(token)
+            const newName = req.body.name;
+
+            await UserController.UserBusiness.updateName(newName, verifyToken.id)
+            
+            res.status(200).send({
+                message: "Nome do usuário alterado com sucesso!"
+            })
+        }
+        catch (err) {
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }
+        await BaseDataBase.destroyConnection()
+    };
+    public async updateOuvinteNaoPagante(req: Request, res: Response) {
+        try {
+            const token = req.headers.authorization || req.headers.Authorization as string
+            const verifyToken = new Authenticator().getData(token);
+            const { id } = req.body
+            
+            if(verifyToken.role !== UserRole.ADMIN) {
+
+                throw new Unauthorized("You can't do this") 
+            }
+            await UserController.UserBusiness.updateOuvinteNaoPagante(id)
+  
+            res.status(200).send({
+                message: "Ouvinte trasnformado em PREMIUM com sucesso!"
+            })
+        }
+        catch (err) {
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }
+        await BaseDataBase.destroyConnection()
+    };
+    public async blockUser(req: Request, res: Response) {
+        try {
+            const token = req.headers.authorization || req.headers.Authorization as string
+            const verifyToken = new Authenticator().getData(token)
+            const { id } = req.body
+            
+            if(verifyToken.role !== UserRole.ADMIN) {
+
+                throw new Unauthorized("You can't do this") 
+            }
+               
+            await UserController.UserBusiness.blockUser(id)
+           
+            res.status(200).send({
+                message: "Usuário bloqueado com sucesso!"
+            })
+        }
+        catch (err) {
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }  
+        await BaseDataBase.destroyConnection()
     }
-    
 }

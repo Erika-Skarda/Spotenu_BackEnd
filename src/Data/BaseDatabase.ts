@@ -9,6 +9,13 @@ export abstract class BaseDataBase {
   //protected abstract table: string;
 
   private static connection: Knex | null = null;
+  
+  protected convertTinyintToBoolean(value: number): boolean {
+    return value === 1
+  }
+  protected convertBooleanToTinyint(value: boolean): number{
+    return value ? 1 : 0
+  }
 
   protected getConnection(): Knex {
     if (BaseDataBase.connection === null) {
