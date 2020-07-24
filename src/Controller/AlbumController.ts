@@ -17,10 +17,7 @@ export class AlbumController extends BaseDataBase {
     private static AlbumBusiness = new AlbumBusiness(
         new AlbumDatabase(),
         new UserDatabase(),
-        new Authenticator(),
-        new HashManager(),
         new IdGenerator()
-
     )
     public async createAlbum(req:Request, res: Response) {
 

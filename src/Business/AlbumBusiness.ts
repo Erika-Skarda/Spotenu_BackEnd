@@ -14,8 +14,6 @@ export class AlbumBusiness {
     constructor(
         private albumDatabase: AlbumDatabase,
         private userDatabase : UserDatabase,
-        private auth: Authenticator,
-        private hashGenerator: HashManager,
         private idGenerator: IdGenerator
     ) {}
 
@@ -33,20 +31,20 @@ export class AlbumBusiness {
 
         };
 
-        // const bandApproved = await this.userDatabase.getUserById(createdBy)
+        const bandApproved = await this.userDatabase.getUserById(createdBy)
 
-        // if(!bandApproved.getApprove()) {
+         if(!bandApproved.getApprove()) {
 
-        //     throw new Unauthorized("Unauthorized!!!!!")
+            throw new Unauthorized("Unauthorized!!!!!")
 
-        // }
+         }
         
         const idAlbum = this.idGenerator.generate();
         const newAlbum = new Album (
 
             idAlbum,
             name,
-            createdBy,
+            bandApproved.getId(),
             id_genre
         );
          const album = await this.albumDatabase.createAlbum(newAlbum)

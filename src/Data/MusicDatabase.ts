@@ -55,4 +55,23 @@ export class MusicDatabase extends BaseDataBase {
             throw new Error(err.message || err.mysqlmessage);
         }
     };
+    public async getMusicId(music_id:string):Promise<any> {
+       
+        try {
+            const musicData = await super.getConnection().raw(`
+
+                SELECT *
+                FROM ${this.table}
+                WHERE id = "${music_id}"
+              
+            
+            `)
+            return (musicData[0][0]);
+            
+
+        }  catch (err) {
+
+            throw new Error(err.message || err.mysqlmessage);
+        }
+    };
 }

@@ -4,7 +4,6 @@ import { NotFoundError } from "../Errors/NotFoundError";
 import { GenericError } from "../Errors/GenericError";
 import { BandOrderDTO } from "../DTO/UserDTO";
 
-
 export class UserDatabase extends BaseDataBase {
 
     protected table:string = "Spotenu_User";
@@ -57,7 +56,7 @@ export class UserDatabase extends BaseDataBase {
             return this.UserFromUserModel(result[0][0]);
         
         } catch (err) {
-
+            console.log(err)
             throw new NotFoundError("User not found")
         }
       }
@@ -98,7 +97,7 @@ export class UserDatabase extends BaseDataBase {
             const result = await super.getConnection().raw(`
                 SELECT * 
                 FROM ${this.table}
-                WHERE id = '${id}'
+                WHERE id ='${id}'
             `);
             
              const Newrole = this.UserFromUserModel(result[0][0]);
@@ -108,7 +107,7 @@ export class UserDatabase extends BaseDataBase {
                   await super.getConnection().raw(`
                     UPDATE ${this.table}
                     SET is_approved = 0
-                    WHERE role=${role}
+                    WHERE id="${id}"
                 
                 `);
              }    
@@ -131,12 +130,9 @@ export class UserDatabase extends BaseDataBase {
     
          const band = this.UserFromUserModel(queryData[0][0]);
       
-
-         //if((Number(band.getApprove()) === 1? true : false) === true) {
             if((band.getApprove()) === true) {
 
                 throw new GenericError("Usuário já aprovado!");
-
             } 
        
             await super.getConnection().raw(`
@@ -145,7 +141,6 @@ export class UserDatabase extends BaseDataBase {
                 WHERE id = "${id}"
            `);
 
-        //    return this.UserFromUserModel(queryData[0][0])
 
         }  catch (err) {
           
@@ -217,16 +212,52 @@ export class UserDatabase extends BaseDataBase {
     public async getAllBands(): Promise<User[]> {
 
         const result = await super.getConnection().raw(`
-          SELECT name, email, nickname, is_approved, description_band
+          SELECT *
           FROM ${this.table}
-          WHERE role = "banda"
-       
-         
+          WHERE role = "banda"     
         `);
           return result[0].map((user: any) => {
 
             return this.UserFromUserModel(user);
         });
       }
+      
+      public async updateName(id: string, newName: string): Promise<void> {
+          await super.getConnection().raw(`
+          UPDATE ${this.table}
+            SET name = "${newName}"
+            WHERE id = "${id}"
+            `)
+        };
+        
+        public async updateOuvinte(id: string): Promise<void> {
+            await super.getConnection().raw(`
+            UPDATE ${this.table}
+            SET role = '${UserRole.OUVINTE_PAGANTE}'
+            WHERE id = "${id}"
+            `)
+        };
+        
+        public async blockUser(id: string): Promise<void> {
+            await super.getConnection().raw(`
+                UPDATE ${this.table}
+                SET is_approved = 0 
+                WHERE id = "${id}"
+            `)
+        };
+        public async getUserByName(name:string): Promise<User | undefined> {
+  
 
+            const dataInfo = await super.getConnection().raw(`
+
+            SELECT *
+            FROM ${this.table}
+            WHERE name = "${name}"
+        
+            `)
+
+            return this.UserFromUserModel(dataInfo[0][0]);
+
+     
+    }
 }

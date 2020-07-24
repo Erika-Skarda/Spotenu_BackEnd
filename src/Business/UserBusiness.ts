@@ -214,5 +214,46 @@ export class UserBusiness {
     }
     return result
   };
+  public async updateName(id:string, name: string) {
+
+    const verify = await this.userDatabase.getUserById(id)
+
+    if(!verify) {
+
+      throw new GenericError("id not found");
+    }
+
+    await this.userDatabase.updateName(id, name)
+  };
+  public async updateOuvinteNaoPagante(id: string) {
+
+    const user = await this.userDatabase.getUserById(id)
+    
+    if (!user) {
+        throw new NotFoundError("Usuário não encontrado.");
+    }
+    if (user.getRole() === UserRole.ADMIN || user.getRole() === UserRole.BANDA || user.getRole() === UserRole.OUVINTE_PAGANTE) {
+        throw new Unauthorized("Apenas ouvintes não pagantes podem ser transformados em premium!")
+    }
+    
+    await this.userDatabase.updateOuvinte(id)
+}
+
+  public async blockUser(id: string) {
+    
+    const user= await this.userDatabase.getUserById(id)
+    if (!user) {
+        throw new NotFoundError("Usuário não encontrado.");
+    }
+ 
+    if (user.getRole() === UserRole.ADMIN) {
+        throw new Unauthorized("Você não tem permissão para bloquear um administrador!")
+    }
+    if(user.getApprove() == false){
+        throw new GenericError("Este usuário já estava bloqueado.")
+    }       
+
+    await this.userDatabase.blockUser(id)
+}
 
 }
