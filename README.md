@@ -4,7 +4,7 @@
   <img src="https://i.imgur.com/xUhQLtc.png"/>
 </p>
 
-## Frontend do Projeto Spotenu
+## Backend do Projeto Spotenu
 
  <p align="center" >
   <img width="20%" src="https://i.imgur.com/MagoMtL.png" />
