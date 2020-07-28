@@ -200,7 +200,7 @@ Entre no projeto e instale as dependências através do comando:
 ```
 npm install
 ```
-Por últomo, suba a aplicação: 
+Por último, suba a aplicação: 
 ```
 npm start
 ```
