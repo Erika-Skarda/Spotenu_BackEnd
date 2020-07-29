@@ -217,6 +217,9 @@ npm start
 - [uuid](https://www.uuidgenerator.net/)
 - [bcrypt](https://www.npmjs.com/package/bcryptjs)
 - [dotenv](https://www.npmjs.com/package/dotenv)
+- [jest](https://jestjs.io/)
+- [mysql](https://www.npmjs.com/package/mysql)
+- [cors](https://www.npmjs.com/package/cors)
 
 ## Stack
 
