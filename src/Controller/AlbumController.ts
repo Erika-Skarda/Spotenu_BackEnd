@@ -55,7 +55,7 @@ export class AlbumController extends BaseDataBase {
  
             res.status(err.errorCode || 400).send({ message: err.message || err.mysqlmessage} )
         }
-        await this.destroyConnection();
+        //await this.destroyConnection();
     };
     public async deleteAlbum(req:Request, res:Response) {
 
@@ -90,7 +90,5 @@ export class AlbumController extends BaseDataBase {
           }
     };
 
-
- 
 
 }

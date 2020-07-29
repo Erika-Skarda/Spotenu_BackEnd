@@ -48,7 +48,7 @@ export class GenreController extends BaseDataBase {
             res.status(error.errorCode || 400).send({ message: error.message});
         }
         
-        await this.destroyConnection();
+        //await this.destroyConnection();
     };
 
     public async getGenre(req: Request, res: Response) {
@@ -68,6 +68,7 @@ export class GenreController extends BaseDataBase {
             return res.status(200).send(result);
 
         } catch (error) {
+            
             console.log(error, "erro")
             
             res.status(error.errorCode || 400).send( {message: error.message})

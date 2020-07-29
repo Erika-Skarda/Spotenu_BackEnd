@@ -44,7 +44,7 @@ export class PlayListController {
             
             res.status(err.errorCode || 400).send({ message: err.message });
         }
-        await BaseDataBase.destroyConnection()
+        //await BaseDataBase.destroyConnection()
      
     };
     public async addMusic(req:Request, res:Response) {
