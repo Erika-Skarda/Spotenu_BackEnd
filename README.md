@@ -243,7 +243,7 @@ simples:
 (como o Frontend)</br></br>
 :rocket: <b>2. Model</b>: responsável pela representação das nossas entidades </br></br>
 :rocket: <b>3. Business</b>: responsável pela lógica de negócio</br></br>
-:rocket: <b>4.DTO</b> significa Data Transfer Object,e ele representa os tipos de dados que precisam ser passados dentrode cada transação com o banco.
+:rocket: <b> 4.DTO</b> significa Data Transfer Object,e ele representa os tipos de dados que precisam ser passados dentrode cada transação com o banco.
 
 ## Desenvolvido Por :octocat:
 
