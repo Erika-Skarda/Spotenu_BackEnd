@@ -210,9 +210,7 @@ npm start
 - [Node](https://nodejs.org/en/)
 - [React](https://pt-br.reactjs.org/)
 - [Redux](https://redux.js.org/)
-- [Styled Components](https://styled-components.com/)
 - [Axios](https://alligator.io/react/axios-react/)
-- [Material ui](https://material-ui.com/pt/)
 - [AWS](https://firebase.google.com/)
 
 ## Desenvolvido Por :octocat:
@@ -220,7 +218,16 @@ npm start
 | [Likedin](https://www.linkedin.com/in/erika-skarda-99915488/) | 
 | :---: |
 
-
+DTO significa Data Transfer Object,
+e ele representa os tipos de dados
+que precisam ser passados dentro
+de cada transação com o banco. Se
+precisamos passar um id para uma
+transação de deleção, por exemplo,
+criamos um objeto de transferência
+que tenha um id. Os DTOs podem
+ser types, classes ou interfaces, mas
+o mais comum é que sejam classes.
 
 
 
