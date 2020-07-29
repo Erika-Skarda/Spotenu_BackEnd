@@ -16,7 +16,6 @@
   <img src="https://img.shields.io/static/v1?label=javascript&message=language&color=green&style=for-the-badge&logo=JAVASCRIPT"/>
   <img src="https://img.shields.io/static/v1?label=typescript&message=language&color=blue&style=for-the-badge&logo=TYPESCRIPT"/>
 
-  <img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge"/>
 </p>
 
 > Status do Projeto: Em desenvolvimento :warning: 
@@ -220,6 +219,7 @@ npm start
 - [dotenv](https://www.npmjs.com/package/dotenv)
 
 ## Stack
+
 Esse é um projeto de Backend feito utilizando NodeJS, Express, Typescript 
 e MySQL. Além disso, ele segue uma arquitetura baseada em MVC, com 3 camadas 
 simples:
