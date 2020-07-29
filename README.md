@@ -176,7 +176,7 @@ Para se logar, o usuário músico pode fornecer o email ou o nickname (junto com
 
 <br><br>
 
-## Testes unitários
+## Testes unitários :bookmark:
 
 No backend, isso implica em sempre
 aplicar essa estratégia quando formos criar
@@ -186,11 +186,11 @@ negócios). Usei a biblioteca Jest
 ## Deploy :eyes:
 
 <p align="justify">
-  O deploy do projeto foi realizado no Surge encontra-se disponivel em: [spotenu-erika.surge.sh]
+  O deploy do projeto foi realizado no Surge encontra-se disponivel em: spotenu-erika.surge.sh
 </p>
 
 <p align="justify">
-  O deploy do projeto foi realizado no Surge encontra-se disponivel em: [https://7nok4l82c2.execute-api.us-east-1.amazonaws.com/dev]
+  O deploy do projeto foi realizado no Surge encontra-se disponivel em: https://7nok4l82c2.execute-api.us-east-1.amazonaws.com/dev
 </p>
 
 
@@ -240,9 +240,9 @@ e MySQL. Além disso, ele segue uma arquitetura baseada em MVC, com 3 camadas
 simples:
 
 :rocket: <b>1. Controller</b>: responsável pela comunicação com agentes externos 
-(como o Frontend)</br>
-:rocket: <b>2. Model</b>: responsável pela representação das nossas entidades </br>
-:rocket: <b>3. Business</b>: responsável pela lógica de negócio</br>
+(como o Frontend)</br></br>
+:rocket: <b>2. Model</b>: responsável pela representação das nossas entidades </br></br>
+:rocket: <b>3. Business</b>: responsável pela lógica de negócio</br></br>
 :rocket: <b>4.DTO</b> significa Data Transfer Object,e ele representa os tipos de dados que precisam ser passados dentrode cada transação com o banco.
 
 ## Desenvolvido Por :octocat:
