@@ -62,7 +62,7 @@ export class UserController extends BaseDataBase {
             console.log("Erro do sign ip:",error)
             res.status(error.errorCode || 400).send({ message: error.message})
         }
-        await BaseDataBase.destroyConnection();
+       // await BaseDataBase.destroyConnection();
 
     }
     public async login(req: Request, res: Response) {
@@ -84,7 +84,7 @@ export class UserController extends BaseDataBase {
             res.status(err.errorCode || 400).send({ message: err.message || err.mysqlmessage} )
         }
 
-         await BaseDataBase.destroyConnection()
+         //await BaseDataBase.destroyConnection()
     }
     public async approveBand(req:Request, res:Response) {
 
@@ -108,7 +108,7 @@ export class UserController extends BaseDataBase {
 
             res.status(error.errorCode || 400).send({ message: error.message})
         }
-        await BaseDataBase.destroyConnection()
+        //await BaseDataBase.destroyConnection()
     }
 
     public async getUsersByTypeAndSortAndPage(req: Request, res:Response) {
@@ -191,7 +191,7 @@ export class UserController extends BaseDataBase {
           
             res.status(err.errorCode || 400).send({ message: err.message });
         }
-        await BaseDataBase.destroyConnection();
+        //await BaseDataBase.destroyConnection();
     };
     public async getUserById(req: Request, res: Response) {
         
@@ -209,7 +209,25 @@ export class UserController extends BaseDataBase {
           
             res.status(err.errorCode || 400).send({ message: err.message });
         }
-        await BaseDataBase.destroyConnection();
+        //await BaseDataBase.destroyConnection();
+    };
+    public async getProfile(req: Request, res: Response) {
+        
+        try { 
+            
+            const token = req.headers.authorization || req.headers.Authorization as string
+            const verifyAdminToken = new Authenticator().getData(token)
+            
+          
+            const result = await UserController.UserBusiness.getUserById(verifyAdminToken.id)
+            
+            res.status(200).send(result)
+        }
+        catch (err) {
+          
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }
+       // await BaseDataBase.destroyConnection();
     };
     public async updateName(req: Request, res: Response) {
         
@@ -227,7 +245,7 @@ export class UserController extends BaseDataBase {
         catch (err) {
             res.status(err.errorCode || 400).send({ message: err.message });
         }
-        await BaseDataBase.destroyConnection()
+       // await BaseDataBase.destroyConnection()
     };
     public async updateOuvinteNaoPagante(req: Request, res: Response) {
         try {
@@ -248,7 +266,7 @@ export class UserController extends BaseDataBase {
         catch (err) {
             res.status(err.errorCode || 400).send({ message: err.message });
         }
-        await BaseDataBase.destroyConnection()
+        //await BaseDataBase.destroyConnection()
     };
     public async blockUser(req: Request, res: Response) {
         try {
@@ -270,6 +288,26 @@ export class UserController extends BaseDataBase {
         catch (err) {
             res.status(err.errorCode || 400).send({ message: err.message });
         }  
-        await BaseDataBase.destroyConnection()
+       // await BaseDataBase.destroyConnection()
+    };
+    public async getAllUsers(req: Request, res: Response) {
+        try {
+            const token = req.headers.authorization || req.headers.Authorization as string
+            const verifyToken = new Authenticator().getData(token)
+
+            if(verifyToken.role !== UserRole.ADMIN) {
+
+                throw new Unauthorized("You can't do this") 
+            }
+
+            const users = await UserController.UserBusiness.getAllUsers()
+            
+            res.status(200).send(users)
+        }
+        catch (err) {
+            
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }
+        //await BaseDataBase.destroyConnection()
     }
 }

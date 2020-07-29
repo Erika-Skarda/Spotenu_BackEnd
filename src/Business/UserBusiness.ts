@@ -215,7 +215,16 @@ export class UserBusiness {
 
       throw new GenericError("id not found");
     }
-    return result
+  //   return {
+  //     id: result.getId(),
+  //     name: result.getName(),
+  //     nickname: result.getNickname,
+  //     email: result.getEmail(),
+  //     description_band:  result.getDescription(),
+  //     role:result.getRole(),
+  //     is_Approved: result.getApprove()
+  // }
+    return (result)
   };
 
   public async updateName(id:string, name: string) {
@@ -260,5 +269,18 @@ export class UserBusiness {
 
     await this.userDatabase.blockUser(id)
   };
+  public async getAllUsers() {
+ 
+    const users = await this.userDatabase.getAllUsers()
+    
+    return users.map(user => ({
+            id: user.getId(),
+            name: user.getName(),
+            email: user.getEmail(),
+            nickname: user.getNickname(),
+            is_Approved: user.getApprove() == true ? true : false,
+            role: user.getRole()
+    }))
+}
 
 }

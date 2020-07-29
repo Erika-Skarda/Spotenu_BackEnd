@@ -24,7 +24,6 @@
   "homepage": "https://github.com/Erika-Skarda/Spotenu_BackEnd#readme",
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
-    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.0",
     "@types/jest": "^26.0.4",
     "@types/jsonwebtoken": "^8.5.0",
@@ -47,7 +46,8 @@
     "serverless-http": "^2.5.0"
   },
   "devDependencies": {
-    "serverless-dotenv-plugin": "^2.4.2",  
+    "@types/cors": "^2.8.6",
+    "serverless-dotenv-plugin": "^2.4.2",
     "serverless-offline": "^6.5.0",
     "serverless-webpack": "^5.3.3",
     "ts-loader": "^8.0.1",

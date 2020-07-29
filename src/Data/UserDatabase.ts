@@ -45,20 +45,18 @@ export class UserDatabase extends BaseDataBase {
         }
     }
     public async getUserById(id: string): Promise<User | undefined> {
-        try {
-            const result = await super.getConnection().raw(`
-
-                SELECT *  
-                FROM ${this.table}
-                WHERE id = '${id}'
-
-            `);
-            return this.UserFromUserModel(result[0][0]);
+         try {
+            const result = await super.getConnection()
+          
+            .select("*")
+            .from(this.table)
+            .where({ id })
+        return this.UserFromUserModel(result[0])
         
         } catch (err) {
-            console.log(err)
-            throw new NotFoundError("User not found")
-        }
+             console.log(err)
+             throw new NotFoundError("User not found")
+         }
       }
     public async getUserByEmail(email:string): Promise<User | undefined> {
   
@@ -222,7 +220,7 @@ export class UserDatabase extends BaseDataBase {
         });
       }
       
-      public async updateName(id: string, newName: string): Promise<void> {
+    public async updateName(id: string, newName: string): Promise<void> {
           await super.getConnection().raw(`
           UPDATE ${this.table}
             SET name = "${newName}"
@@ -230,34 +228,41 @@ export class UserDatabase extends BaseDataBase {
             `)
         };
         
-        public async updateOuvinte(id: string): Promise<void> {
-            await super.getConnection().raw(`
+    public async updateOuvinte(id: string): Promise<void> {
+        await super.getConnection().raw(`
+        UPDATE ${this.table}
+        SET role = '${UserRole.OUVINTE_PAGANTE}'
+        WHERE id = "${id}"
+        `)
+    };
+        
+    public async blockUser(id: string): Promise<void> {
+        await super.getConnection().raw(`
             UPDATE ${this.table}
-            SET role = '${UserRole.OUVINTE_PAGANTE}'
+            SET is_approved = 0 
             WHERE id = "${id}"
-            `)
-        };
-        
-        public async blockUser(id: string): Promise<void> {
-            await super.getConnection().raw(`
-                UPDATE ${this.table}
-                SET is_approved = 0 
-                WHERE id = "${id}"
-            `)
-        };
-        public async getUserByName(name:string): Promise<User | undefined> {
-  
+        `)
+    };
+    public async getUserByName(name:string): Promise<User | undefined> {
 
-            const dataInfo = await super.getConnection().raw(`
 
-            SELECT *
-            FROM ${this.table}
-            WHERE name = "${name}"
-        
-            `)
+        const dataInfo = await super.getConnection().raw(`
 
-            return this.UserFromUserModel(dataInfo[0][0]);
+        SELECT *
+        FROM ${this.table}
+        WHERE name = "${name}"
+    
+        `)
+
+        return this.UserFromUserModel(dataInfo[0][0]);
 
      
+    };
+    public async getAllUsers(): Promise<User[]> {
+        const result = await super.getConnection().raw(`
+            SELECT * 
+            FROM ${this.table}
+        `)
+        return result[0].map((user: any) => this.UserFromUserModel(user))
     }
 }
