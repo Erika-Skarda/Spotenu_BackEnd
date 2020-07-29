@@ -176,11 +176,23 @@ Para se logar, o usuário músico pode fornecer o email ou o nickname (junto com
 
 <br><br>
 
-## Deploy
+## Testes unitários
+
+No backend, isso implica em sempre
+aplicar essa estratégia quando formos criar
+classes da camada business (regra de
+negócios). Usei a biblioteca Jest
+
+## Deploy :eyes:
 
 <p align="justify">
-  O deploy do projeto foi realizado no firebase e encontra-se disponivel em: [spotenu-erika.surge.sh]
+  O deploy do projeto foi realizado no Surge encontra-se disponivel em: [spotenu-erika.surge.sh]
 </p>
+
+<p align="justify">
+  O deploy do projeto foi realizado no Surge encontra-se disponivel em: [https://7nok4l82c2.execute-api.us-east-1.amazonaws.com/dev]
+</p>
+
 
 ## Pré-requisitos
 
