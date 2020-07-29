@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/static/v1?label=react&message=library&color=blue&style=for-the-badge&logo=REACT" />
+
   <img src="https://img.shields.io/static/v1?label=redux&message=library&color=yellow&style=for-the-badge&logo=REDUX"/>
   <img src="https://img.shields.io/static/v1?label=javascript&message=language&color=green&style=for-the-badge&logo=JAVASCRIPT"/>
   <img src="https://img.shields.io/static/v1?label=typescript&message=language&color=blue&style=for-the-badge&logo=TYPESCRIPT"/>
@@ -208,26 +208,33 @@ npm start
 ## Linguagens, dependencias e libs utilizadas :books:
 
 - [Node](https://nodejs.org/en/)
-- [React](https://pt-br.reactjs.org/)
-- [Redux](https://redux.js.org/)
+- [Typescript](https://www.typescriptlang.org/)
 - [Axios](https://alligator.io/react/axios-react/)
-- [AWS](https://firebase.google.com/)
+- [AWS](https://aws.google.com/)
+- [express](https://expressjs.com/)
+- [jwt](https://jwt.io/)
+- [knex](http://knexjs.org/)
+- [moment](https://momentjs.com/docs/)
+- [uuid](https://www.uuidgenerator.net/)
+- [bcrypt](https://www.npmjs.com/package/bcryptjs)
+- [dotenv](https://www.npmjs.com/package/dotenv)
+
+## Stack
+Esse é um projeto de Backend feito utilizando NodeJS, Express, Typescript 
+e MySQL. Além disso, ele segue uma arquitetura baseada em MVC, com 3 camadas 
+simples:
+
+:rocket: <b>1. Controller</b>: responsável pela comunicação com agentes externos 
+(como o Frontend)</br>
+:rocket: <b>2. Model</b>: responsável pela representação das nossas entidades </br>
+:rocket: <b>3. Business</b>: responsável pela lógica de negócio</br>
+:rocket: <b>4.DTO</b> significa Data Transfer Object,e ele representa os tipos de dados que precisam ser passados dentrode cada transação com o banco.
 
 ## Desenvolvido Por :octocat:
 
 | [Likedin](https://www.linkedin.com/in/erika-skarda-99915488/) | 
 | :---: |
 
-DTO significa Data Transfer Object,
-e ele representa os tipos de dados
-que precisam ser passados dentro
-de cada transação com o banco. Se
-precisamos passar um id para uma
-transação de deleção, por exemplo,
-criamos um objeto de transferência
-que tenha um id. Os DTOs podem
-ser types, classes ou interfaces, mas
-o mais comum é que sejam classes.
 
 
 
