@@ -34,7 +34,7 @@ export class GenreDatabase extends BaseDataBase {
     }
     public async getGenreByName(genre:string):Promise<Genre | undefined> {
        
-        try {
+      
             const genreData = await super.getConnection().raw(`
 
                 SELECT *
@@ -44,10 +44,6 @@ export class GenreDatabase extends BaseDataBase {
             `)
             return this.Genre(genreData[0][0])
 
-        }  catch (err) {
-
-            throw new Error(err.message || err.mysqlmessage);
-        }
     }
     public async getGenreById(idGenre:string):Promise<Genre | undefined> {
        

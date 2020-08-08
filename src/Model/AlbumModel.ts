@@ -6,7 +6,8 @@ export class Album {
         private id_album: string,
         private name: string,
         private createdBy: string,
-        private id_genre: Genre[]
+        private id_genre: Genre[],
+        private photo?: string
 
     ) {
     }
@@ -22,6 +23,9 @@ export class Album {
     }
     public getGenre():Genre[] {
         return this.id_genre
+    }
+    public getPhoto():string {
+        return this.photo
     }
     public setGenre(genres: Genre[]){
         this.id_genre = genres;

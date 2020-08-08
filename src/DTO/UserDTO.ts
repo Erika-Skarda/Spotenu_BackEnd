@@ -4,6 +4,7 @@ export interface SignupInputDTO {
     nickname:string,
     password: string,
     role: string,
+    photo: string,
     description_band:string
 }
 export interface BandOrderDTO {

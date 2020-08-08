@@ -18,6 +18,7 @@ export class UserDatabase extends BaseDataBase {
                 UserModel.nickname,
                 UserModel.password,
                 UserModel.role,
+                UserModel.photo,
                 UserModel.description_band,
                 UserModel.is_approved
 
@@ -27,7 +28,7 @@ export class UserDatabase extends BaseDataBase {
     public async createUser(newUser:User):Promise<void> {
         try {
             await this.getConnection().raw( `
-                INSERT INTO ${this.table} (id, name, email, nickname, password, role, description_band)
+                INSERT INTO ${this.table} (id, name, email, nickname, password, role, photo, description_band)
                 VALUES(
                     "${newUser.getId()}",
                     "${newUser.getName()}",
@@ -35,6 +36,7 @@ export class UserDatabase extends BaseDataBase {
                     "${newUser.getNickname()}",
                     "${newUser.getPassword()}",
                     "${newUser.getRole()}",
+                    "${newUser.getPhoto()}",
                     "${newUser.getDescription()}"
                 )
             
@@ -222,7 +224,7 @@ export class UserDatabase extends BaseDataBase {
       
     public async updateName(id: string, newName: string): Promise<void> {
           await super.getConnection().raw(`
-          UPDATE ${this.table}
+            UPDATE ${this.table}
             SET name = "${newName}"
             WHERE id = "${id}"
             `)
