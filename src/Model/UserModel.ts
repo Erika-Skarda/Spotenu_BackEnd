@@ -9,6 +9,7 @@ export class User {
         private nickname: string,   
         private password: string,
         private role: UserRole, 
+        private photo?: string,
         private description_band?: string,
         private is_approved?: boolean
     ) {}
@@ -30,6 +31,9 @@ export class User {
     }
     public getRole():UserRole {
         return this.role
+    }
+    public getPhoto():string {
+        return this.photo
     }
     public getDescription():string {
         return this.description_band

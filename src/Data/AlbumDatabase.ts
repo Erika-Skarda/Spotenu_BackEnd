@@ -11,10 +11,12 @@ export class AlbumDatabase extends BaseDataBase {
     return (
             AlbumModel && 
             new Album (
+                
                 AlbumModel.id_album,
                 AlbumModel.name,
                 AlbumModel.createdBy,
-                AlbumModel.id_genre
+                AlbumModel.id_genre,
+                AlbumModel.photo,
 
              )
          )
@@ -29,13 +31,15 @@ export class AlbumDatabase extends BaseDataBase {
 
                     id_album: newAlbum.getId(),
                     name: newAlbum.getName(),
-                    createdBy: newAlbum.getCreatedBy()
+                    createdBy: newAlbum.getCreatedBy(),
+                    photo: newAlbum.getPhoto()
 
                 })
                 .into("Spotenu_album");
 
             await super.getConnection()
                 .insert({
+
                     id_album: newAlbum.getId(),
                     id_genre: newAlbum.getGenre()
 
@@ -55,7 +59,7 @@ export class AlbumDatabase extends BaseDataBase {
 
                 SELECT *
                 FROM ${this.table}
-                WHERE id ="${idAlbum}"
+                WHERE id_album ="${idAlbum}"
             
             `)
             return this.AlbumFromModel(albumData[0][0])
@@ -65,7 +69,19 @@ export class AlbumDatabase extends BaseDataBase {
             throw new Error(err.message || err.mysqlmessage);
         }
     };
-    
+    public async getAlbunsByBandId(bandId: string): Promise<Album[]> {
+
+        const result = await super.getConnection().raw(`
+            SELECT * 
+            FROM ${this.table}
+            WHERE createdBy = "${bandId}"
+        `)
+        return result[0].map((album: any) => {
+            
+           return  this.AlbumFromModel(album);
+           
+        })
+    }
     
     public async DeleteAlbum(idAlbum:string):Promise<void> {
 

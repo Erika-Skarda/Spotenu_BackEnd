@@ -26,6 +26,7 @@ export class UserBusiness {
         nickname: string,
         password: string,
         role: string,
+        photo?:string,
         description_band?:string
 
     ) {
@@ -67,7 +68,8 @@ export class UserBusiness {
             nickname, 
             hashPassword, 
             User.mapStringToUserType(role), 
-            description_band
+            description_band,
+            photo
           )
 
         await this.userDatabase.createUser(user)
@@ -279,7 +281,8 @@ export class UserBusiness {
             email: user.getEmail(),
             nickname: user.getNickname(),
             is_Approved: user.getApprove() == true ? true : false,
-            role: user.getRole()
+            role: user.getRole(),
+            photo: user.getPhoto()
     }))
 }
 

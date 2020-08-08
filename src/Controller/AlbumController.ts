@@ -27,7 +27,8 @@ export class AlbumController extends BaseDataBase {
 
                 name: req.body.name,
                 createdBy: req.headers.authorization as string,
-                id_genre: req.body.id_genre
+                id_genre: req.body.id_genre,
+                photo: req.body.photo
 
             }
 
@@ -44,7 +45,8 @@ export class AlbumController extends BaseDataBase {
 
                     newAlbum.name,
                     adminToken.id,
-                    newAlbum.id_genre
+                    newAlbum.id_genre,
+                    newAlbum.photo
 
                 )
                 
@@ -57,6 +59,24 @@ export class AlbumController extends BaseDataBase {
         }
         //await this.destroyConnection();
     };
+    public async getAlbunsByBandId(req: Request, res: Response) {
+        try {
+            const token = req.headers.authorization || req.headers.Authorization as string
+            const verifyBandoken = new Authenticator().getData(token)
+
+            if(verifyBandoken.role !== UserRole.BANDA) {
+
+                throw new Unauthorized("Você não tem permissão para buscar álbuns por artista!")
+            }
+            const albuns = await AlbumController.AlbumBusiness.getAlbunsByBandId(verifyBandoken.id)
+
+            res.status(200).send(albuns)
+        }
+        catch (err) {
+       
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }
+    }
     public async deleteAlbum(req:Request, res:Response) {
 
         try {

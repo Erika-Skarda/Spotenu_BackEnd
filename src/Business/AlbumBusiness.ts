@@ -8,6 +8,8 @@ import { Genre } from "../Model/GenreMusicModel";
 import { AlbumDatabase } from "../Data/AlbumDatabase";
 import { Unauthorized } from "../Errors/Unauthorized";
 import { GenericError } from "../Errors/GenericError";
+import { NotFoundError } from "../Errors/NotFoundError";
+import { UserRole } from "../Model/UserModel";
 
 export class AlbumBusiness {
 
@@ -21,7 +23,8 @@ export class AlbumBusiness {
         
         name: string,
         createdBy: string,
-        id_genre:Genre[]
+        id_genre:Genre[],
+        photo:string
 
     ) {
 
@@ -45,12 +48,29 @@ export class AlbumBusiness {
             idAlbum,
             name,
             bandApproved.getId(),
-            id_genre
+            id_genre,
+            photo
+
         );
          const album = await this.albumDatabase.createAlbum(newAlbum)
          return album;
 
     };
+    public async getAlbunsByBandId(bandId: string) {
+       
+        const user = await this.userDatabase.getUserById(bandId)
+        if (!user) {
+            throw new NotFoundError("Usuário não encontrado.");
+        }
+        if (user.getRole() !== UserRole.BANDA) {
+            
+            throw new Unauthorized("Você não tem permissão para buscar álbuns por artista!")
+        }
+
+        const albuns = await this.albumDatabase.getAlbunsByBandId(user.getId())
+        return albuns
+    }
+
 
     public async deleteAlbum(
 
