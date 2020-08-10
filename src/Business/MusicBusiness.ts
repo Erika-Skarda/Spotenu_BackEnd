@@ -8,6 +8,8 @@ import { AlbumDatabase } from "../Data/AlbumDatabase";
 import { GenericError } from "../Errors/GenericError";
 import { Music } from "../Model/MusicModel";
 import { NotFoundError } from "../Errors/NotFoundError";
+import { UserRole } from "../Model/UserModel";
+import { Unauthorized } from "../Errors/Unauthorized";
 
 export class MusicBusiness {
 
@@ -22,13 +24,20 @@ export class MusicBusiness {
 
         name: string,
         id_album : string
-    ) {
+        ) {
 
         if(!name || !id_album) {
-
+            
             throw new InvalidParameterError("Missing input")
-
+            
         };
+        const verufyMusic = await this.musicDatabase.getMusicByName(name, id_album)
+
+        if(verufyMusic) {
+
+            throw new NotFoundError("Try other name")
+
+        }
         // const verifyAlbum = await this.albumDatabase.getAlbumById(id_album);
 
         // if(!verifyAlbum) {
@@ -58,6 +67,35 @@ export class MusicBusiness {
         // }
 
 
+    };
+    public async getMyMusics(id:string) {
+
+       
+        const user = await this.userDatabase.getUserById(id)
+
+        if (!user) {
+            throw new NotFoundError("Usuário não encontrado. Faça novo login.");
+        }
+        if (user.getRole() !== UserRole.BANDA) {
+
+            throw new Unauthorized("Você não tem permissão para acessar esse endpoint.")
+        }
+
+
+        const musics = await this.musicDatabase.getMyMusics(id)
+        return musics
+    };
+    
+    public async getMusicsByAlbumId(albumId:string) {
+
+        const allMusics = await this.musicDatabase.getMusicsByAlbumId(albumId)
+        return allMusics
+
     }
+    public async getAllMusics(){
+        const allMusics = await this.musicDatabase.getAllMusics()
+        return allMusics
+    }
+
         
 }

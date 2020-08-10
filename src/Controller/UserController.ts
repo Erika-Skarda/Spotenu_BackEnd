@@ -30,6 +30,7 @@ export class UserController extends BaseDataBase {
                 nickname: req.body.nickname,
                 password: req.body.password,
                 role: req.body.role,
+                photo:req.body.photo,
                 description_band: req.body.description_band
 
             }
@@ -52,6 +53,7 @@ export class UserController extends BaseDataBase {
                 newUser.nickname,
                 newUser.password,
                 newUser.role,
+                newUser.photo,
                 newUser.description_band
 
             )
