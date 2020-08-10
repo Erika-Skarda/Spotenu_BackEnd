@@ -4,3 +4,6 @@ export interface MusicInputDTO {
     id_album :string
 
 }
+export interface GetMusicByIdInputDTO {
+    id_album: string
+}
