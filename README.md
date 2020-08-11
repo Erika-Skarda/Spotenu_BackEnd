@@ -205,7 +205,7 @@ negócios). Usei a biblioteca Jest
 No terminal, clone o projeto: 
 
 ```
-git clone https://github.com/nauaramelo/spotenu-front.git
+git clone https://github.com/Erika-Skarda/Spotenu_BackEnd.git
 ```
 Entre no projeto e instale as dependências através do comando:
 ```
