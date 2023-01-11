@@ -36,7 +36,7 @@
     "express": "^4.17.0",
     "jest": "^26.1.0",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.21.2",
+    "knex": "^2.4.0",
     "moment": "^2.27.0",
     "mysql": "^2.18.1",
     "serverless": "^1.74.1",
